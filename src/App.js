@@ -1,40 +1,60 @@
-import logo from './logo.svg';
+import { useState, useEffect } from 'react';
 import './App.css';
-import { Routes, Route } from "react-router-dom";
-import InsertCommentTwoToneIcon from '@mui/icons-material/InsertCommentTwoTone';
 import ResponsiveAppBar from './component/Header';
-import SimpleBottomNavigation from './component/Bottom';
-import CarouselPage from './component/Carousel';
-import ReactSlick from './component/ReactSlick';
-import OfferCard from './component/OfferCard';
-import MovieCards from './component/Cards/MovieCards';
-import { Footer } from './component/Footer';
-import { Tooltip } from '@mui/material';
-import { SignIn } from './component/Cards/signin/SignIn';
-import Home from './component/Home';
 import Auth from './component/Auth';
-import Books from './component/Books';
+import { BookDataContext, StorageContext } from './component/Context';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate, Link } from 'react-router-dom';
 
 function App() {
+
+  const [bookData, setBookData] = useState([]);
+  const [wishList, setWishList] = useState([]);
+  const [cartList, setCartList] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetch('https://freetestapi.com/api/v1/books')
+      .then((response) => response.json())
+      .then((json) => setBookData(json));
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("wishList", JSON.stringify(wishList));
+  }, [wishList]);
+
+  useEffect(() => {
+    localStorage.setItem("cartList", JSON.stringify(cartList));
+  }, [cartList]);
+
+
   return (
     <div className="App">
-      <ResponsiveAppBar />
-      <Auth />
-      <Footer />
-      {/* <Books /> */}
-      {/* <CarouselPage /> */}
-      {/* <ReactSlick /> */}
-      {/* <OfferCard />
-      <MovieCards /> */}
-      {/* <SimpleBottomNavigation /> */}
+      <StorageContext.Provider value={{ wishList, setWishList, setCartList, cartList }}>
+        <div>
+          <ResponsiveAppBar />
+        </div>
+
+        <div>
+          <BookDataContext.Provider value={bookData}>
+            <Auth />
+          </BookDataContext.Provider>
+        </div>
+
+        <div >
+          {/* <Footer /> */}
+          <ToastContainer />
+        </div>
+
+      </StorageContext.Provider>
+
 
       {/* <div style={{position: "sticky", top: "0px", right: "0px"}}>
         <Tooltip title="Need Help?">
         <InsertCommentTwoToneIcon sx={{fontSize: "80px"}}/>
         </Tooltip>
       </div> */}
-
-      {/* <SignIn /> */}
 
     </div>
   );

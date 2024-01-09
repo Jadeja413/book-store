@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from "react"
+import { useState, useContext } from "react"
 
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -17,13 +17,20 @@ import AdbIcon from '@mui/icons-material/Adb';
 import MovieIcon from '@mui/icons-material/Movie';
 import FavoriteTwoToneIcon from '@mui/icons-material/FavoriteTwoTone';
 import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded';
+import Badge from '@mui/material/Badge';
+import { useNavigate } from 'react-router-dom';
+import { StorageContext } from './Context';
 
 const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Profile', 'Dashboard', 'Logout'];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+
+  const data = useContext(StorageContext);
+
+  const navigate = useNavigate();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -32,16 +39,22 @@ function ResponsiveAppBar() {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
+  const handleCloseNavMenu = (page) => {
     setAnchorElNav(null);
+    navigate(`/${page}`);
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (page) => {
     setAnchorElUser(null);
+    if (page === "Dashboard") {
+      navigate("/");
+    } else if (page === "Profile") {
+      navigate("/profile");
+    }
   };
 
   return (
-    <AppBar position="static" sx={{backgroundColor: "black"}}>
+    <AppBar position="static" sx={{ backgroundColor: "black" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <MovieIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
@@ -49,7 +62,7 @@ function ResponsiveAppBar() {
             variant="h6"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            onClick={() => navigate("/")}
             sx={{
               mr: 10,
               display: { xs: 'none', md: 'flex' },
@@ -58,6 +71,7 @@ function ResponsiveAppBar() {
               letterSpacing: '.3rem',
               color: 'inherit',
               textDecoration: 'none',
+              cursor: "pointer"
             }}
           >
             Book Store
@@ -122,7 +136,7 @@ function ResponsiveAppBar() {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                onClick={() => handleCloseNavMenu(page)}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {page}
@@ -136,10 +150,12 @@ function ResponsiveAppBar() {
               aria-label="account of current user"
               aria-controls="menu-appbar"
               aria-haspopup="true"
-              onClick={handleOpenUserMenu}
+              onClick={() => navigate("/wishlist")}
               color="inherit"
             >
-              <FavoriteTwoToneIcon htmlColor="white"/>
+              <Badge badgeContent={(new Set(data?.wishList.map(obj => obj.id))).size} color="info">
+                <FavoriteTwoToneIcon htmlColor="white" />
+              </Badge>
             </IconButton>
 
             <IconButton
@@ -147,15 +163,17 @@ function ResponsiveAppBar() {
               aria-label="account of current user"
               aria-controls="menu-appbar"
               aria-haspopup="true"
-              onClick={handleOpenUserMenu}
+              onClick={() => navigate("/cart")}
               color="inherit"
             >
-              <ShoppingCartRoundedIcon htmlColor="white"/>
+              <Badge badgeContent={(new Set(data?.cartList.map(obj => obj.id))).size} color="info">
+                <ShoppingCartRoundedIcon htmlColor="white" />
+              </Badge>
             </IconButton>
 
             <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+              <IconButton onClick={handleOpenUserMenu} >
+                <Avatar />
               </IconButton>
             </Tooltip>
             <Menu
@@ -175,7 +193,7 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem key={setting} onClick={() => handleCloseUserMenu(setting)}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
