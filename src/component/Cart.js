@@ -13,16 +13,16 @@ import "react-toastify/dist/ReactToastify.css";
 
 export default function Cart() {
   const bookData = useContext(BookDataContext);
-  const wishListData = useContext(StorageContext);
+  const data = useContext(StorageContext);
 
   const navigate = useNavigate();
 
-  const updatedCartList = bookData.filter(item1 => wishListData.cartList.some(item2 => item1.id === item2.id));
+  const updatedCartList = bookData.filter(item1 => data.cartList.some(item2 => item1.id === item2.id));
 
   function AddToWishListHandler(id) {
-    const updatedCartList = wishListData.cartList.filter(book => book.id !== id);
+    const updatedCartList = data.cartList.filter(book => book.id !== id);
     
-    wishListData.setWishList((list) => {
+    data.setWishList((list) => {
       if (!list.some(item => item.id === id)) {
         toast.success("Added To Your WishList!", {
           position: toast.POSITION.TOP_CENTER,
@@ -37,7 +37,16 @@ export default function Cart() {
       return list;
     }
     );
-    wishListData.setCartList(updatedCartList);
+    data.setCartList(updatedCartList);
+  }
+
+  function removeHandler(id) {
+    const filteredArray = data.cartList.filter(item => item.id !== id);
+    data.setCartList(filteredArray);
+    toast.success("Removed From Your Cart!", {
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: 1500
+    });
   }
 
   return (
@@ -91,7 +100,7 @@ export default function Cart() {
                       <div style={{ display: "flex", justifyContent: "space-between" }}>
                         <h4>$: </h4>
                         <div>
-                          <h5>- count + | Remove</h5>
+                          <h5>- count + | <button onClick={()=>removeHandler(book.id)}>Remove</button></h5>
                         </div>
                       </div>
                       {/* <Typography gutterBottom variant="h5" component="div">
