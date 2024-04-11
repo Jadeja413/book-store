@@ -6,19 +6,42 @@ import { BookDataContext, StorageContext } from './component/Context';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate, Link } from 'react-router-dom';
+// import Example from './Example';
+// import Example1 from './Example1';
+import UnAuth from './component/UnAuth';
+import { createContext } from 'react';
+// import {Footer} from './component/Footer'
+import { TokenContext } from './component/ContextCreate';
 
 function App() {
 
   const [bookData, setBookData] = useState([]);
   const [wishList, setWishList] = useState([]);
   const [cartList, setCartList] = useState([]);
-  const navigate = useNavigate();
+
+  const [token, setToken] = useState(localStorage.getItem('token'));
+
+  // const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('https://freetestapi.com/api/v1/books')
+    if (token) {
+      localStorage.setItem("token", token);
+    }
+    else {
+      localStorage.removeItem("token");
+    }
+  }, [token]);
+
+  useEffect(() => {
+    fetch('http://localhost:9000/books', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
       .then((response) => response.json())
-      .then((json) => setBookData(json));
-  }, []);
+      .then((json) => setBookData(json))
+      .catch (console.error())
+  }, [token]);
 
   useEffect(() => {
     localStorage.setItem("wishList", JSON.stringify(wishList));
@@ -28,17 +51,21 @@ function App() {
     localStorage.setItem("cartList", JSON.stringify(cartList));
   }, [cartList]);
 
-
   return (
-    <div className="App">
+    <div className="App" style={{ minHeight: "100vh" }}>
       <StorageContext.Provider value={{ wishList, setWishList, setCartList, cartList }}>
+
+        {/* <Example />
+        <Example1 /> */}
         <div>
-          <ResponsiveAppBar />
+          {/* <ResponsiveAppBar /> */}
         </div>
 
         <div>
           <BookDataContext.Provider value={bookData}>
-            <Auth />
+            <TokenContext.Provider value={{ setToken, token }}>
+              {token ? <Auth /> : <UnAuth />}
+            </TokenContext.Provider>
           </BookDataContext.Provider>
         </div>
 
@@ -48,7 +75,6 @@ function App() {
         </div>
 
       </StorageContext.Provider>
-
 
       {/* <div style={{position: "sticky", top: "0px", right: "0px"}}>
         <Tooltip title="Need Help?">

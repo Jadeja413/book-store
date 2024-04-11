@@ -1,9 +1,9 @@
 import { useState, useEffect, Fragment, useContext } from "react";
 import { CardFormat } from "./Cards/CardFormat";
-import { Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { BookDataContext } from "./Context";
 
-export default function RecommendedBooks({type}) {
+export default function RecommendedBooks({ type }) {
 
   // const [movieData, setMovieData] = useState([]);
 
@@ -20,17 +20,27 @@ export default function RecommendedBooks({type}) {
   return (
     <Fragment>
       <div>
-        <Typography variant="h3" sx={{margin: "20px 30px"}}>{type || "All"} Books</Typography>
+        <Typography variant="h3" sx={{ margin: "20px 30px" }}>{type || "All"} Books</Typography>
       </div>
-      <div style={{ margin: "10px 30px", padding: "10px 10px", display: "flex", flexWrap: "wrap"}}>
+      {/* <div style={{ margin: "10px 30px", padding: "10px 10px", display: "flex", flexWrap: "wrap" }}> */}
+      <Grid container spacing={2} sx={{ padding: "20px" }}>
         {
           filteredData.map(book => (
-            <div key={book.id} style={{width: "33%"}}>
-              <CardFormat id={book.id} name={book.title} description={book.description} author={book.author} image={book.cover_image} year={book.publication_year} />
-            </div>
+            // <div key={book.id} style={{width: "33%"}}>
+            <Grid key={book.id} item xs={12} sm={6} md={4} lg={3} xl={2}>
+              <CardFormat
+                id={book.id}
+                name={book.title}
+                description={book.description}
+                author={book.author}
+                image={book.cover_image}
+                year={book.publication_year} />
+              {/* </div> */}
+            </Grid>
           ))
         }
-      </div>
+      </Grid>
+      {/* </div> */}
     </Fragment>
   )
 }

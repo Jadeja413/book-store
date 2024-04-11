@@ -1,59 +1,113 @@
-import { TextField, Button, Typography } from "@mui/material";
+import { TextField, Button, Typography, InputAdornment, IconButton } from "@mui/material";
 import { Formik, useFormik } from "formik";
-import { Fragment } from "react";
+import { Fragment, useContext, useState } from "react";
 import * as Yup from 'yup';
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { TokenContext } from "../../ContextCreate";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 export function SignIn() {
+  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleMouseDownPassword = () => setShowPassword(!showPassword);
+
+  const { setToken } = useContext(TokenContext);
+
   return (
     <Fragment>
       <Formik
-        initialValues={{firstName: "", lastName: "", email: ""}}
+        initialValues={{ email: "", password: "" }}
         validationSchema={Yup.object({
-          firstName: Yup.string("Should be in Char").max(15, "First Name should have 15 char or less").required(),
-          lastName: Yup.string("Should be in Char").max(15, "Last Name should have 15 char or less").required(),
+          email: Yup.string("Should be in Char").email().required(),
+          password: Yup.string().required(),
         })}
-        onSubmit={ (values) => {
-          alert(JSON.stringify(values, null, 2));
+        onSubmit={async (values) => {
+          try {
+            const response = await axios.post('http://localhost:9000/login', {
+              email: values.email,
+              password: values.password,
+            });
+
+            const { token } = response.data;
+            localStorage.setItem('token', token);
+            setToken(token)
+            navigate('/');
+
+          } catch (error) {
+            // console.error('Error signing up:', error.message);
+            console.log('Error-error:', error.response.data.message);
+            toast.error(error.response.data.message, {
+              // position: toast.POSITION.TOP_CENTER,
+              autoClose: 1500
+            });
+          }
         }}
       >
         {
           formik => (
-            <form onSubmit={formik.handleSubmit} style={{display: "flex", alignItems: "center", justifyContent: "center", height: "100vh"}}>
-              <div style={{width: "50%"}}>
-                <div style={{margin: "20px 20px"}}>
+            <form onSubmit={formik.handleSubmit} style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100vh" }}>
+              <div style={{ width: "50%" }}>
+                <div style={{ margin: "20px 20px" }}>
                   <Typography variant="h3" gutterBottom color="primary" >Login Info</Typography>
                 </div>
-                <div style={{margin: "20px 20px"}}>
+                <div>
+                  {/* {console.log("formik", formik)} */}
+                </div>
+                <div style={{ margin: "20px 20px" }}>
                   <TextField
                     fullWidth
-                    id="firstName"
-                    name="firstName"
-                    label="First Name"
-                    value={formik.values.firstName}
+                    id="email"
+                    name="email"
+                    label="Email"
+                    value={formik.values.email}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    error={formik.touched.firstName && Boolean(formik.errors.firstName)}
-                    helperText={formik.touched.firstName && (formik.errors.firstName)}
+                    error={formik.touched.email && Boolean(formik.errors.email)}
+                    helperText={formik.touched.email && (formik.errors.email)}
                   />
                 </div>
-                <div style={{margin: "20px 20px"}}>
+                <div style={{ margin: "20px 20px" }}>
                   <TextField
                     fullWidth
-                    id="lastName"
-                    name="lastName"
-                    label="Last Name"
-                    value={formik.values.lastName}
+                    id="password"
+                    name="password"
+                    label="Password"
+                    type={showPassword ? "text" : "password"}
+                    value={formik.values.password}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    error={formik.touched.lastName && Boolean(formik.errors.lastName)}
-                    helperText={formik.touched.lastName && formik.errors.lastName}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                            data-testid='checkToggle'
+                          >
+                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                          </IconButton>
+                        </InputAdornment>
+                      )
+                    }}
+                    error={formik.touched.password && Boolean(formik.errors.password)}
+                    helperText={formik.touched.password && formik.errors.password}
                   />
                 </div>
-                <div style={{margin: "20px 20px"}}>
+                <div style={{ margin: "20px 20px" }}>
                   <Button color="primary" variant="contained" fullWidth type="submit">
                     SignIn
                   </Button>
                 </div>
+                <div style={{display: "flex", justifyContent: "center"}}>
+                <p>Do not have an account? <Link to='/signup' >Create One</Link></p>
+                </div>
+                <ToastContainer />
               </div>
             </form>
           )
@@ -62,65 +116,3 @@ export function SignIn() {
     </Fragment>
   )
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import { useFormik } from "formik";
-// import * as Yup from 'yup';
-
-// export function SignIn() {
-//   const formik = useFormik({
-//     initialValues: {
-//       email: "",
-//       firstName: "",
-//       lastName: ""
-//     },
-//     validationSchema: Yup.object({
-//       firstName: Yup.string().max(15, "First Name should have 15 char or less").required(),
-//       lastName: Yup.string("should be char").max(15, "First Name should have 15 char or less").required(),
-      
-//     }),
-//     onSubmit: values => {
-//       alert(JSON.stringify(values, null, 2));
-//     }
-//   });
-
-//   return (
-//     <div>
-//       <form onSubmit={formik.handleSubmit}>
-//         <div>
-//         <label htmlFor="firstName">First Name:</label>
-//         <input id="firstName" type="text" {...formik.getFieldProps('firstName')} />
-//         {formik.touched.firstName && formik.errors.firstName ? <div> {formik.errors.firstName} </div> : null}
-//         </div>
-
-//         <div>
-//         <label htmlFor="lastName">Last Name:</label>
-//         <input id="lastName" type="text" {...formik.getFieldProps('lastName')}/>
-//         {formik.touched.lastName && formik.errors.lastName ? <div> {formik.errors.lastName} </div> : null}
-//         </div>
-
-//         <div>
-//         <label htmlFor="email">Email Address:</label>
-//         <input id="email" type="text" {...formik.getFieldProps('email')}/>
-//         {formik.touched.email && formik.errors.email ? <div> {formik.errors.email} </div> : null}
-//         </div>
-
-//         <div>
-//           <input type="submit"/>
-//         </div>
-//       </form>
-//     </div>
-//   )
-// }

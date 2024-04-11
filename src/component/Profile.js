@@ -4,7 +4,6 @@ import CardBlock from "./CardBlock"
 
 export default function Profile() {
   const data = useContext(BookDataContext)
-  console.log("''''", data)
 
   return (
     <div>

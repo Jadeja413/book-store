@@ -1,14 +1,21 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { TextField, Button, Typography, IconButton, InputAdornment } from "@mui/material";
 import { Formik } from "formik";
 import { Fragment } from "react";
 import * as Yup from 'yup';
+import axios from "axios";
+import { TokenContext } from "../../ContextCreate";
+import { useNavigate } from "react-router-dom";
 
 export function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = () => setShowPassword(!showPassword);
+
+  const navigate = useNavigate();
+  const {setToken} = useContext(TokenContext);
+
   return (
     <Fragment>
       <Formik
@@ -20,9 +27,27 @@ export function SignUp() {
           password: Yup.string().required("Password required"),
           confirmPassword: Yup.string().oneOf([Yup.ref('password')], 'Passwords must match').required('changepassword is required')
         })}
-        onSubmit={ (values) => {
-          // alert(JSON.stringify(values, null, 2));
-          console.log("submit", values.password);
+        onSubmit={ async (values) => {
+          try {
+            const response = await axios.post('http://localhost:9000/signup', {
+              firstName: values.firstName,
+              lastName: values.lastName,
+              email: values.email,
+              password: values.password,
+            });
+      
+            const {token} = response.data;
+            localStorage.setItem('token', token);
+            setToken(token)
+            navigate('/');
+      
+          } catch (error) {
+            console.error('Error signing up:', error.message);
+            // toast.error(error.response.data.message, {
+            //   // position: toast.POSITION.TOP_CENTER,
+            //   autoClose: 1500
+            // });
+          }
         }}
       >
         {

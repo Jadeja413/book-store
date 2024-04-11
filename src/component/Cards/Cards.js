@@ -11,15 +11,14 @@ import { BookDataContext } from '../Context';
 
 export default function Cards(props) {
 
-  const { type, titleOf, onPath} = props;
+  const { type, titleOf, onPath } = props;
   // const [movieData, setMovieData] = useState([]);
 
   const navigate = useNavigate();
   const bookData = useContext(BookDataContext);
 
   const filteredData = bookData.filter((item) => (item.genre).includes(type));
-  console.log("filteredData", filteredData.length)
-  
+
   // useEffect(() => {
   //   fetch('https://freetestapi.com/api/v1/books')
   //     .then((response) => response.json())
@@ -35,11 +34,11 @@ export default function Cards(props) {
       //   onClick={onClick}
       // />
       <div>
-        <NavigateNextIcon className={className} style={{ ...style,  color: "black" }} onClick={onClick} />
+        <NavigateNextIcon className={className} style={{ ...style, color: "black" }} onClick={onClick} />
       </div>
     );
   }
-  
+
   function SamplePrevArrow(props) {
     const { className, style, onClick } = props;
     return (
@@ -67,26 +66,33 @@ export default function Cards(props) {
 
   return (
     <Fragment>
-      <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", margin: "10px 20px"}}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "10px 20px" }}>
         <div>
-          <p style={{color: "GrayText", fontSize: "20px"}}>{titleOf}</p>
+          <p style={{ color: "GrayText", fontSize: "20px" }}>{titleOf}</p>
         </div>
         <div>
-          <Link to={onPath} style={{color: "#1976d2", textDecoration: "none"}}>{"view more >>"}</Link>
+          <Link to={onPath} style={{ color: "#1976d2", textDecoration: "none" }}>{"view more >>"}</Link>
         </div>
       </div>
 
       <div style={{ margin: "10px 30px", padding: "10px 10px" }}>
         <Slider {...settings}>
-        {/* <div style={{ display: "flex", width: "100%", overflowX: "scroll"}}> */}
+          {/* <div style={{ display: "flex", width: "100%", overflowX: "scroll"}}> */}
           {
             filteredData.map(book => (
-              <div key={book.id} style={{width: "20%"}}>
-                <CardFormat  id={book.id} name={book.title} description={book.description} image={book.cover_image} author={book.author} year={book.publication_year}/>
+              <div key={book.id} style={{ width: "20%" }}>
+                <CardFormat
+                  id={book.id}
+                  name={book.title}
+                  description={book.description}
+                  image={book.cover_image}
+                  author={book.author}
+                  year={book.publication_year}
+                />
               </div>
             ))
           }
-        {/* </div> */}
+          {/* </div> */}
         </Slider>
       </div>
     </Fragment>

@@ -10,7 +10,7 @@ export default function DetailsPage() {
   return (
     <div className="container">
       <div className="imgSection">
-        {/* <img src="https://minio.b336522.dev.eastus.az.svc.builder.cafe/sbucket/ddjl6plcepj2lxdicll6vnv0jo9y" alt="product's image" /> */}
+        <img src="https://minio.b336522.dev.eastus.az.svc.builder.cafe/sbucket/ddjl6plcepj2lxdicll6vnv0jo9y" alt="product's image" />
       </div>
       <div className="contentSection">
         <Typography variant="h3">

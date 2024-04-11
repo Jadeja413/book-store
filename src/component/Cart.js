@@ -2,11 +2,14 @@ import { useContext } from "react"
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import { Box, Typography } from '@mui/material';
+import { Box, Divider, Grid, Paper, Typography } from '@mui/material';
 import { Button, CardActionArea, CardActions } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { BookDataContext, StorageContext } from "./Context"
 import { useNavigate } from "react-router-dom";
+import DeleteOutlineTwoToneIcon from '@mui/icons-material/DeleteOutlineTwoTone';
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
+import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // import "./Cart.css"
@@ -21,7 +24,7 @@ export default function Cart() {
 
   function AddToWishListHandler(id) {
     const updatedCartList = data.cartList.filter(book => book.id !== id);
-    
+
     data.setWishList((list) => {
       if (!list.some(item => item.id === id)) {
         toast.success("Added To Your WishList!", {
@@ -50,78 +53,129 @@ export default function Cart() {
   }
 
   return (
-    <div style={{ width: "90%", margin: "auto" }}>
-      <div>
-        <h3>Your Cart!</h3>
-      </div>
-      <div>
-        {!updatedCartList.length &&
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection: 'column',
-              minHeight: '80vh',
-            }}
-          >
-            <Typography variant="h3" >
-              Cart Is Empty
-            </Typography>
-            <Typography variant="h6" >
-              Looks like you haven’t added anything to your cart yet
-            </Typography>
-            <Button variant="contained" onClick={() => navigate("/products")}>Browse Products</Button>
-          </Box>}
-      </div>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        {updatedCartList.length > 0 &&
-          <div style={{ width: "60%", height: "75vh", padding: "10px 10px", overflow: "auto", scrollbarWidth: "none", '&::-webkit-scrollbar': { display: 'none' }, border: "1px solid gray", borderRadius: "40px" }}>
-            {
-              updatedCartList.map(book =>
-                <div >
-                  <Card sx={{ width: "auto", margin: "40px 40px", display: "flex", }}>
-                    <CardMedia
-                      component="img"
-                      height="100"
-                      image={book.cover_image}
-                      alt={book.title}
-                      sx={{ width: "30%" }}
-                    />
-                    <CardContent sx={{ width: "70%" }}>
-                      <div style={{ display: "flex", justifyContent: "space-between" }}>
-                        <h2>{book.title}</h2>
-                        <div style={{ display: "flex", alignItems: "center" }} onClick={()=>AddToWishListHandler(book.id)}>
-                          <FavoriteBorderIcon htmlColor="gray" /> <span style={{ margin: " 10px 10px" }}>Add To WishList</span>
-                          <ToastContainer />
+    <div >
+      {!updatedCartList.length ?
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'column',
+            minHeight: '80vh',
+          }}
+        >
+          <Typography variant="h3" align="left">
+            Cart Is Empty
+          </Typography>
+          <Typography variant="h6" >
+            Looks like you haven’t added anything to your cart yet
+          </Typography>
+          <Button variant="contained" onClick={() => navigate("/products")}>Browse Products</Button>
+        </Box> :
+        <Grid sx={{ margin: "50px 50px" }} >
+
+          <Grid container spacing={4} >
+            <Grid item xs={6} sx={{
+              // height: '900px',
+              // width: '200px',
+              overflowY: 'auto',
+              // WebkitScrollbarWidth: '10px',
+              scrollbarWidth: 'thin',
+              scrollbarColor: 'gray',
+            }} >
+              <Box>
+                <Typography variant="h5" >Cart Items</Typography>
+              </Box>
+              {
+                updatedCartList.map(book =>
+                  <Box >
+                    <Card sx={{ width: "auto", margin: "40px 10px", display: "flex", }}>
+                      <CardMedia
+                        component="img"
+                        height="100"
+                        image={book.cover_image}
+                        alt={book.title}
+                        sx={{ width: "30%" }}
+                      />
+                      <CardContent sx={{ width: "70%" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between" }}>
+                          <h2>{book.title}</h2>
+                          <div style={{ display: "flex", alignItems: "center" }} onClick={() => AddToWishListHandler(book.id)}>
+                            <FavoriteBorderIcon htmlColor="gray" /> <span style={{ margin: " 10px 10px" }}>Add To WishList</span>
+                            <ToastContainer />
+                          </div>
                         </div>
-                      </div>
-                      <hr />
-                      <div style={{ display: "flex", justifyContent: "space-between" }}>
-                        <h4>$: </h4>
-                        <div>
-                          <h5>- count + | <button onClick={()=>removeHandler(book.id)}>Remove</button></h5>
+                        <hr />
+                        <div style={{ display: "flex", justifyContent: "space-between", marginTop: '30px ' }}>
+                          <Box>
+                            <Typography variant="body1" mt={1}>₹: {book.price}</Typography>
+                          </Box>
+
+                          <Box sx={{ border: '1px solid gray', borderRadius: '8px' }}>
+                            <Button> <RemoveOutlinedIcon /> </Button>
+                            2
+                            <Button> <AddOutlinedIcon /> </Button>
+                            <Button sx={{ borderLeft: '1px solid gray', borderRadius: '0px', color: 'red' }} onClick={() => removeHandler(book.id)} > <DeleteOutlineTwoToneIcon />Remove </Button>
+                          </Box>
+
                         </div>
-                      </div>
-                      {/* <Typography gutterBottom variant="h5" component="div">
-                        {book.title}
-                      </Typography> */}
-                      {/* <Typography gutterBottom variant="h7" component="div">
-                        {book.author}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {book.description}
-                      </Typography> */}
-                    </CardContent>
-                  </Card>
-                </div>
-              )
-            }
-          </div>}
-        <div style={{ width: "40%", margin: "10px 10px" }}>
-          {updatedCartList.length > 0 && <h3>Calculations</h3>}
-        </div>
-      </div>
+                        <Box display='flex' justifyContent='end' mt={2}>
+                          <Typography variant="overline" fontSize={14}> Total Amount: 280 </Typography>
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  </Box>
+                )
+              }
+            </Grid>
+            <Grid item xs={6} >
+              <Paper elevation={2} sx={{ padding: '20px 10px', margin: "70px 20px 50px 10px"}}>
+              <Grid item xs={12} sx={{ margin: "20px" }}>
+                <Box >
+                  <Box>
+                    <Typography variant="h6" > Shipping Address </Typography>
+                  </Box>
+
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography sx={{ margin: '10px' }} > Add Delivery Address </Typography>
+                    <Button sx={{ marginRight: '20px' }}>Change</Button>
+                  </Box>
+
+                  <Box >
+                    <Typography variant="overline" component="div"> Address line 1, </Typography>
+                    <Typography variant="overline" component="div"> Address line 2, </Typography>
+                    <Typography variant="overline" component="div"> Address line 3, </Typography>
+                    <Typography variant="overline" component="div"> Address line 4, </Typography>
+                    <Typography variant="overline" component="div"> Address line 5, </Typography>
+                    <Typography variant="overline" component="div"> Address line 6, </Typography>
+                  </Box>
+
+                </Box>
+              </Grid>
+
+              <Grid item xs={12} sx={{ margin: "30px" }} elevation>
+                <Box >
+                  <Typography variant="h6" > Total Amount </Typography>
+                </Box>
+
+                <Box sx={{ display: 'flex', justifyContent: 'space-around', margin: '10px 50px' }}>
+                  <Typography variant="overline" fontSize={15}> Items Total </Typography>
+                  <Typography variant="overline" fontSize={15}> ₹ 190 </Typography>
+                </Box>
+
+                <Divider />
+
+                <Box sx={{ display: "grid", margin: '30px 50px' }}>
+                  <Button variant="contained" align="center"> Proceed to Checkout </Button>
+                </Box>
+
+              </Grid>
+              </Paper>
+            </Grid>
+          </Grid>
+        </Grid>
+      }
     </div>
+
   )
 }

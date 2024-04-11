@@ -13,8 +13,6 @@ export default function WishListComp() {
   const bookData = useContext(BookDataContext);
   const data = useContext(StorageContext);
 
-  console.log("bookData", bookData)
-
   const navigate = useNavigate();
 
   const updatedWishList = bookData.filter(item1 => data.wishList.some(item2 => item1.id === item2.id));
@@ -56,7 +54,7 @@ export default function WishListComp() {
                     component="img"
                     height="120"
                     image={book.cover_image}
-                    alt="green iguana"
+                    alt={book.title}
                   />
                   <CardContent>
                     <Typography gutterBottom variant="h5" component="div">

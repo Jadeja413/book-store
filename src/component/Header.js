@@ -20,6 +20,7 @@ import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded';
 import Badge from '@mui/material/Badge';
 import { useNavigate } from 'react-router-dom';
 import { StorageContext } from './Context';
+import { TokenContext } from './ContextCreate';
 
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Dashboard', 'Logout'];
@@ -29,6 +30,7 @@ function ResponsiveAppBar() {
   const [anchorElUser, setAnchorElUser] = useState(null);
 
   const data = useContext(StorageContext);
+  const { setToken } = useContext(TokenContext)
 
   const navigate = useNavigate();
 
@@ -50,6 +52,9 @@ function ResponsiveAppBar() {
       navigate("/");
     } else if (page === "Profile") {
       navigate("/profile");
+    } else if (page === "Logout") {
+      setToken(null)
+      navigate('/login');
     }
   };
 
@@ -172,7 +177,7 @@ function ResponsiveAppBar() {
             </IconButton>
 
             <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} >
+              <IconButton onClick={handleOpenUserMenu}>
                 <Avatar />
               </IconButton>
             </Tooltip>

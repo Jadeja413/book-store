@@ -4,7 +4,8 @@ import ReactLoading from "react-loading";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./ProductDetailsPage.css"
-import { StorageContext } from './Context';
+import { BookDataContext, StorageContext } from './Context';
+import { TokenContext } from './ContextCreate';
 
 const ProductDetailsPage = () => {
   const [product, setProduct] = useState(null);
@@ -14,14 +15,19 @@ const ProductDetailsPage = () => {
   const params = useParams();
   const navigate = useNavigate();
 
-  const uniqueIds = new Set();
-
-  console.log("data", data)
+  const books = useContext(BookDataContext);
+  const token = useContext(TokenContext)
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`https://freetestapi.com/api/v1/books/${params.id}`);
+        // const response = await fetch(`https://freetestapi.com/api/v1/books/${params.id}`);
+        const response = await fetch(`http://localhost:9000/books/${params.id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+        );
         if (!response.ok) {
           throw new Error('Failed to fetch product');
         }

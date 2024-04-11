@@ -1,0 +1,16 @@
+GET http://localhost:5000/get
+
+###
+
+POST http://localhost:5000/post
+Content-Type: application/json
+
+{
+    "title": "String",
+    "author": "String",
+    "publication_year": 1999,
+    "genre": ["String"],
+    "description": "String",
+    "cover_image": "String",
+    "price": 100,
+}
