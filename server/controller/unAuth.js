@@ -17,7 +17,7 @@ const signup = async (req, res, next) => {
       user.save();
 
       const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, {
-        expiresIn: '1m'
+        expiresIn: '1 hour'
       })
 
       res.json({token, message: 'Registration successful', data: user });
@@ -42,7 +42,7 @@ const login = async (req, res, next) => {
     if(!passMacth) return res.status(404).json({message: 'password is Incorrect'});
 
     const token = jwt.sign({ userId: checkUser._id }, process.env.SECRET_KEY, {
-      expiresIn: '1m'
+      expiresIn: '1 hour'
     });
     res.json({ token, message: 'Login successful' });
   } catch (error) {

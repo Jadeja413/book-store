@@ -73,9 +73,12 @@ export default function Cart() {
           <Button variant="contained" onClick={() => navigate("/products")}>Browse Products</Button>
         </Box> :
         <Grid sx={{ margin: "50px 50px" }} >
+          <Box>
+            <Typography variant="h5" >Cart Items</Typography>
+          </Box>
 
           <Grid container spacing={4} >
-            <Grid item xs={6} sx={{
+            <Grid item xs={12} md={6} sx={{
               // height: '900px',
               // width: '200px',
               overflowY: 'auto',
@@ -83,13 +86,11 @@ export default function Cart() {
               scrollbarWidth: 'thin',
               scrollbarColor: 'gray',
             }} >
-              <Box>
-                <Typography variant="h5" >Cart Items</Typography>
-              </Box>
+
               {
                 updatedCartList.map(book =>
                   <Box >
-                    <Card sx={{ width: "auto", margin: "40px 10px", display: "flex", }}>
+                    <Card sx={{ width: "auto", marginBottom: "40px", marginTop: "20px", display: "flex", }}>
                       <CardMedia
                         component="img"
                         height="100"
@@ -128,48 +129,48 @@ export default function Cart() {
                 )
               }
             </Grid>
-            <Grid item xs={6} >
-              <Paper elevation={2} sx={{ padding: '20px 10px', margin: "70px 20px 50px 10px"}}>
-              <Grid item xs={12} sx={{ margin: "20px" }}>
-                <Box >
-                  <Box>
-                    <Typography variant="h6" > Shipping Address </Typography>
-                  </Box>
-
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Typography sx={{ margin: '10px' }} > Add Delivery Address </Typography>
-                    <Button sx={{ marginRight: '20px' }}>Change</Button>
-                  </Box>
-
+            <Grid item xs={12} md={6} >
+              <Paper elevation={2} sx={{ padding: '20px 10px', margin: "20px 20px 50px 10px" }}>
+                <Grid item xs={12} sx={{ margin: "20px" }}>
                   <Box >
-                    <Typography variant="overline" component="div"> Address line 1, </Typography>
-                    <Typography variant="overline" component="div"> Address line 2, </Typography>
-                    <Typography variant="overline" component="div"> Address line 3, </Typography>
-                    <Typography variant="overline" component="div"> Address line 4, </Typography>
-                    <Typography variant="overline" component="div"> Address line 5, </Typography>
-                    <Typography variant="overline" component="div"> Address line 6, </Typography>
+                    <Box>
+                      <Typography variant="h6" > Shipping Address </Typography>
+                    </Box>
+
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <Typography sx={{ margin: '10px' }} > Add Delivery Address </Typography>
+                      <Button sx={{ marginRight: '20px' }}>Change</Button>
+                    </Box>
+
+                    <Box >
+                      <Typography variant="overline" component="div"> Address line 1, </Typography>
+                      <Typography variant="overline" component="div"> Address line 2, </Typography>
+                      <Typography variant="overline" component="div"> Address line 3, </Typography>
+                      <Typography variant="overline" component="div"> Address line 4, </Typography>
+                      <Typography variant="overline" component="div"> Address line 5, </Typography>
+                      <Typography variant="overline" component="div"> Address line 6, </Typography>
+                    </Box>
+
+                  </Box>
+                </Grid>
+
+                <Grid item xs={12} sx={{ margin: "30px" }} elevation>
+                  <Box >
+                    <Typography variant="h6" > Total Amount </Typography>
                   </Box>
 
-                </Box>
-              </Grid>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-around', margin: '10px 50px' }}>
+                    <Typography variant="overline" fontSize={15}> Items Total </Typography>
+                    <Typography variant="overline" fontSize={15}> ₹ 190 </Typography>
+                  </Box>
 
-              <Grid item xs={12} sx={{ margin: "30px" }} elevation>
-                <Box >
-                  <Typography variant="h6" > Total Amount </Typography>
-                </Box>
+                  <Divider />
 
-                <Box sx={{ display: 'flex', justifyContent: 'space-around', margin: '10px 50px' }}>
-                  <Typography variant="overline" fontSize={15}> Items Total </Typography>
-                  <Typography variant="overline" fontSize={15}> ₹ 190 </Typography>
-                </Box>
+                  <Box sx={{ display: "grid", margin: '30px 50px' }}>
+                    <Button variant="contained" align="center"> Proceed to Checkout </Button>
+                  </Box>
 
-                <Divider />
-
-                <Box sx={{ display: "grid", margin: '30px 50px' }}>
-                  <Button variant="contained" align="center"> Proceed to Checkout </Button>
-                </Box>
-
-              </Grid>
+                </Grid>
               </Paper>
             </Grid>
           </Grid>

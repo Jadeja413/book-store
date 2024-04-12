@@ -15,7 +15,7 @@ import { TokenContext } from './component/ContextCreate';
 
 function App() {
 
-  const [bookData, setBookData] = useState([]);
+  // const [bookData, setBookData] = useState([]);
   const [wishList, setWishList] = useState([]);
   const [cartList, setCartList] = useState([]);
 
@@ -32,16 +32,16 @@ function App() {
     }
   }, [token]);
 
-  useEffect(() => {
-    fetch('http://localhost:9000/books', {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-      .then((response) => response.json())
-      .then((json) => setBookData(json))
-      .catch (console.error())
-  }, [token]);
+  // useEffect(() => {
+  //   fetch('http://localhost:9000/books', {
+  //     headers: {
+  //       Authorization: `Bearer ${token}`
+  //     }
+  //   })
+  //     .then((response) => response.json())
+  //     .then((json) => setBookData(json))
+  //     .catch (console.error())
+  // }, [token]);
 
   useEffect(() => {
     localStorage.setItem("wishList", JSON.stringify(wishList));
@@ -62,11 +62,11 @@ function App() {
         </div>
 
         <div>
-          <BookDataContext.Provider value={bookData}>
+          {/* <BookDataContext.Provider value={bookData}> */}
             <TokenContext.Provider value={{ setToken, token }}>
               {token ? <Auth /> : <UnAuth />}
             </TokenContext.Provider>
-          </BookDataContext.Provider>
+          {/* </BookDataContext.Provider> */}
         </div>
 
         <div >

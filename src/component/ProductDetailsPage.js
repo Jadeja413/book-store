@@ -5,7 +5,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./ProductDetailsPage.css"
 import { BookDataContext, StorageContext } from './Context';
-import { TokenContext } from './ContextCreate';
+// import { TokenContext } from './ContextCreate';
+import axios from 'axios';
 
 const ProductDetailsPage = () => {
   const [product, setProduct] = useState(null);
@@ -16,30 +17,48 @@ const ProductDetailsPage = () => {
   const navigate = useNavigate();
 
   const books = useContext(BookDataContext);
-  const token = useContext(TokenContext)
+  // const token = useContext(TokenContext);
+  const token = localStorage.getItem('token')
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        // const response = await fetch(`https://freetestapi.com/api/v1/books/${params.id}`);
-        const response = await fetch(`http://localhost:9000/books/${params.id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-        );
-        if (!response.ok) {
-          throw new Error('Failed to fetch product');
-        }
-        const data = await response.json();
-        setProduct(data);
-      } catch (error) {
-        console.error('Error fetching product:', error.message);
-      }
-    };
 
-    fetchProduct();
+    // async function fetchBook() {
+    //   try {
+    //     const response = await fetch(`http://localhost:9000/books/${params.id}`, {
+    //       headers: {
+    //         Authorization: `Bearer ${token}`
+    //       }
+    //     }
+    //     );
+    //     if (!response.ok) {
+    //       throw new Error('Failed to fetch product');
+    //     }
+    //     const data = await response.json();
+    //     setProduct(data);
+    //   } catch (error) {
+    //     console.error('Error fetching product:', error.message);
+    //   }
+    // };
+
+async function fetchBook() {
+    try {
+      const bookFetchData = await axios.get(`http://localhost:9000/books/${params.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      setProduct(bookFetchData.data);
+    } catch (error) {
+      // toast.error('session is expired');
+      // localStorage.removeItem('token');
+      // navigate('/login');
+      console.log("eeeeeee", error)
+    }
+  }
+  fetchBook();
   }, [params.id]);
+
 
   const handleQuantityChange = (e) => {
     setQuantity(parseInt(e.target.value, 10));
