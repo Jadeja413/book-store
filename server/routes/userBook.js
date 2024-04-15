@@ -23,7 +23,6 @@ router.get('/:bookId', authenticate,  async (req, res) => {
     const bookId = req.params.bookId;
 
     const item = books.find(book => (book.id === parseInt(bookId)));
-    console.log("item res", item)
     res.json(item);
   } catch (error) {
     res.status(500).json({ error: error.message });

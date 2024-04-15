@@ -54,6 +54,7 @@ function ResponsiveAppBar() {
       navigate("/profile");
     } else if (page === "Logout") {
       setToken(null)
+      localStorage.clear();
       navigate('/login');
     }
   };
@@ -158,8 +159,10 @@ function ResponsiveAppBar() {
               onClick={() => navigate("/wishlist")}
               color="inherit"
             >
-              <Badge badgeContent={(new Set(data?.wishList.map(obj => obj.id))).size} color="info">
+              <Badge badgeContent={JSON.parse(localStorage.getItem('user')).wishlistCount} color="info">
+              {/* <Badge badgeContent={(new Set(data?.wishList.map(obj => obj.id))).size} color="info"> */}
                 <FavoriteTwoToneIcon htmlColor="white" />
+              {/* </Badge> */}
               </Badge>
             </IconButton>
 

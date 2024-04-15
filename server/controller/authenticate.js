@@ -10,12 +10,12 @@ const authenticate = async (req, res, next) => {
   }
 
   try {
-    console.log("authenticate", token)
+    // console.log("authenticate", token)
     const decodeToken = jwt.verify(token, process.env.SECRET_KEY);
-    console.log("authenticate", decodeToken)
+    // console.log("authenticate", decodeToken)
 
     const user = await User.findById(decodeToken.userId);
-    console.log("user", user)
+    // console.log("user", user)
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -23,7 +23,7 @@ const authenticate = async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    console.log("authenticate error", error)
+    // console.log("authenticate error", error)
 
     res.status(401).json({ message: error.message });
   }

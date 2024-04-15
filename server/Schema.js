@@ -70,19 +70,15 @@ const bookSchema = new mongoose.Schema({
 //   }]
 // }, { timestamps: true });
 
-// const userWishlistSchema = new mongoose.Schema({
-//   id: Number,
-//   item: [{
-//     itemId: Number,
-//     itemCount: Number,
-//   }]
-// });
+const WishBookSchema = new mongoose.Schema({
+  bookId: { type: Number, required: true, unique: true }
+});
 
-// // const userCartSchema = new mongoose.Schema({
-// //   userEmail: String,
-// //   itemId: Number,
-// //   itemCount: Number,
-// // });
+// Define the schema for the wishlist
+const WishlistSchema = new mongoose.Schema({
+  userId: { type: String, required: true },
+  books: [WishBookSchema] // Array of books
+});
 
 //hashing the password before save
 userSchema.pre('save', async function (next) {
@@ -115,7 +111,7 @@ const User = mongoose.model("USER", userSchema);
 const Book = mongoose.model("BOOK", bookSchema);
 // const Order = mongoose.model('Order', orderSchema);
 // const OrderItem = mongoose.model('OrderItem', orderItemSchema);
-// const WhishList = mongoose.model('Wishlist', userWishlistSchema)
-// const WishList = mongoose.model('WishList', wishListSchema);
+const Wishlist = mongoose.model('Wishlist', WishlistSchema);
 
-module.exports = { User, Book };
+
+module.exports = { User, Book, Wishlist };

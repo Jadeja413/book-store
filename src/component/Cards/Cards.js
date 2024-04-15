@@ -19,12 +19,6 @@ export default function Cards(props) {
 
   const filteredData = bookData.filter((item) => (item.genre).includes(type));
 
-  // useEffect(() => {
-  //   fetch('https://freetestapi.com/api/v1/books')
-  //     .then((response) => response.json())
-  //     .then((json) => setMovieData(json));
-  //   }, []);
-
   function SampleNextArrow(props) {
     const { className, style, onClick } = props;
     return (
@@ -33,9 +27,7 @@ export default function Cards(props) {
       //   style={{ ...style,  background: "grey" }}
       //   onClick={onClick}
       // />
-      <div>
-        <NavigateNextIcon className={className} style={{ ...style, color: "black" }} onClick={onClick} />
-      </div>
+      <div><NavigateNextIcon className={className} style={{ ...style, color: "black" }} onClick={onClick} /></div>
     );
   }
 
@@ -47,9 +39,7 @@ export default function Cards(props) {
       //   style={{ ...style, display: "block", background: "none", color: "black" }}
       //   onClick={onClick}
       // />
-      <div>
-        <NavigateBeforeIcon className={className} style={{ ...style, color: "black" }} onClick={onClick} />
-      </div>
+      <div><NavigateBeforeIcon className={className} style={{ ...style, color: "black" }} onClick={onClick} /></div>
     );
   }
 
@@ -77,7 +67,6 @@ export default function Cards(props) {
 
       <div style={{ margin: "10px 30px", padding: "10px 10px" }}>
         <Slider {...settings}>
-          {/* <div style={{ display: "flex", width: "100%", overflowX: "scroll"}}> */}
           {
             filteredData.map(book => (
               <div key={book.id} style={{ width: "20%" }}>
@@ -92,7 +81,6 @@ export default function Cards(props) {
               </div>
             ))
           }
-          {/* </div> */}
         </Slider>
       </div>
     </Fragment>

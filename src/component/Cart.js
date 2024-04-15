@@ -154,7 +154,7 @@ export default function Cart() {
                   </Box>
                 </Grid>
 
-                <Grid item xs={12} sx={{ margin: "30px" }} elevation>
+                <Grid item xs={12} sx={{ margin: "30px" }}>
                   <Box >
                     <Typography variant="h6" > Total Amount </Typography>
                   </Box>
