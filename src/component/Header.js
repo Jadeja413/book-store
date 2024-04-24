@@ -19,18 +19,21 @@ import FavoriteTwoToneIcon from '@mui/icons-material/FavoriteTwoTone';
 import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded';
 import Badge from '@mui/material/Badge';
 import { useNavigate } from 'react-router-dom';
-import { StorageContext } from './Context';
+import { StorageContext, UserDataContext } from './Context';
 import { TokenContext } from './ContextCreate';
 
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Dashboard', 'Logout'];
 
 function ResponsiveAppBar() {
+// console.log("userData", userData.wishlistCount)
+
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
   const data = useContext(StorageContext);
-  const { setToken } = useContext(TokenContext)
+  const { setToken } = useContext(TokenContext);
+  const { userData } = useContext(UserDataContext)
 
   const navigate = useNavigate();
 
@@ -159,7 +162,7 @@ function ResponsiveAppBar() {
               onClick={() => navigate("/wishlist")}
               color="inherit"
             >
-              <Badge badgeContent={JSON.parse(localStorage.getItem('user')).wishlistCount} color="info">
+              <Badge badgeContent={userData?.wishlistCount} color="info">
               {/* <Badge badgeContent={(new Set(data?.wishList.map(obj => obj.id))).size} color="info"> */}
                 <FavoriteTwoToneIcon htmlColor="white" />
               {/* </Badge> */}

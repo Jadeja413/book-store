@@ -10,10 +10,12 @@ import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import { useNavigate } from 'react-router-dom';
 import { FavoriteBorderOutlined } from '@mui/icons-material';
-import { StorageContext } from '../Context';
+import { StorageContext, UserDataContext } from '../Context';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { IconButton } from '@mui/material';
+import axios from 'axios';
+import { TokenContext } from '../ContextCreate';
 
 
 const style = {
@@ -34,37 +36,78 @@ export function CardFormat(props) {
   const navigate = useNavigate();
 
   const data = useContext(StorageContext);
+  const { setUserData } = useContext(UserDataContext);
+  const { token } = useContext(TokenContext);
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  function AddToWishListHandler(id) {
-    const updatedCartList = data.cartList.filter(book => book.id !== id);
 
-    data.setWishList((list) => {
-      if (!list.some(item => item.id === id)) {
-        toast.success("Added To Your WishList!", {
-          position: toast.POSITION.TOP_CENTER,
-          autoClose: 1500
-        });
-        return list.concat({ id: id });
+  async function AddToWishListHandler(id) {
+    // const updatedCartList = data.cartList.filter(book => book.id !== id);
+
+    // data.setWishList((list) => {
+    //   if (!list.some(item => item.id === id)) {
+    //     toast.success("Added To Your WishList!", {
+    //       position: toast.POSITION.TOP_CENTER,
+    //       autoClose: 1500
+    //     });
+    //     return list.concat({ id: id });
+    //   }
+    //   toast.success("Already Added To Your WishList!", {
+    //     position: toast.POSITION.TOP_CENTER,
+    //     autoClose: 1500
+    //   })
+    //   return list;
+    // }
+    // );
+    // data.setCartList(updatedCartList);
+
+    try {
+      // const user = localStorage.getItem('user');
+      const user = JSON.parse(localStorage.getItem('user'));
+
+      const response = await axios.post('http://localhost:9000/wishlist/add',
+        {
+          userId: user._id, bookId: id,
+
+        }, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
       }
-      toast.success("Already Added To Your WishList!", {
+      );
+      console.log('resp', response);
+      // setUserData({...userData, wishlistCount: userData.wishlistCount + 1})
+      setUserData((prev) => ({ ...prev, wishlistCount: prev.wishlistCount + 1 }));
+
+      const updatedUser = { ...user, wishlistCount: user.wishlistCount + 1 };
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+
+      toast.success("Added To Your WishList!", {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 1500
+      });
+      // const localS = JSON.parse(localStorage.getItem('user'));
+      // const updatedLocal = {...localS, wishlistCount: response.data.wishlistCount};
+      // localStorage.setItem('user', JSON.stringify(updatedLocal));
+      // console.log('localS', localS)
+      // console.log('updatedLocal', updatedLocal)
+    } catch (error) {
+      toast.error(error.response.data.message, {
         position: toast.POSITION.TOP_CENTER,
         autoClose: 1500
       })
-      return list;
+      // console.log('error', error)
     }
-    );
-    data.setCartList(updatedCartList);
   }
 
   return (
     <div style={{ margin: "20px 20px" }} >
       <Card sx={{ height: 400, position: "relative" }}>
         <IconButton
-          onClick={()=>AddToWishListHandler(id)}
+          onClick={() => AddToWishListHandler(id)}
           style={{ zIndex: "1", position: "absolute", right: "0px", top: "0px", color: "gray" }}
         >
           <FavoriteBorderOutlined htmlColor="gray" />

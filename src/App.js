@@ -15,22 +15,23 @@ import { TokenContext } from './component/ContextCreate';
 
 function App() {
 
-  // const [bookData, setBookData] = useState([]);
   const [wishList, setWishList] = useState([]);
+
   const [cartList, setCartList] = useState([]);
 
   const [token, setToken] = useState(localStorage.getItem('token'));
+  
 
   // const navigate = useNavigate();
 
-  useEffect(() => {
-    if (token) {
-      localStorage.setItem("token", token);
-    }
-    else {
-      localStorage.removeItem("token");
-    }
-  }, [token]);
+  // useEffect(() => {
+  //   if (token) {
+  //     localStorage.setItem("token", token);
+  //   }
+  //   else {
+  //     localStorage.removeItem("token");
+  //   }
+  // }, [token]);
 
   // useEffect(() => {
   //   fetch('http://localhost:9000/books', {
@@ -55,18 +56,10 @@ function App() {
     <div className="App" style={{ minHeight: "100vh" }}>
       <StorageContext.Provider value={{ wishList, setWishList, setCartList, cartList }}>
 
-        {/* <Example />
-        <Example1 /> */}
         <div>
-          {/* <ResponsiveAppBar /> */}
-        </div>
-
-        <div>
-          {/* <BookDataContext.Provider value={bookData}> */}
-            <TokenContext.Provider value={{ setToken, token }}>
-              {token ? <Auth /> : <UnAuth />}
-            </TokenContext.Provider>
-          {/* </BookDataContext.Provider> */}
+          <TokenContext.Provider value={{ setToken, token }}>
+            {token ? <Auth /> : <UnAuth />}
+          </TokenContext.Provider>
         </div>
 
         <div >

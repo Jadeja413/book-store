@@ -36,8 +36,9 @@ export function SignUp() {
               password: values.password,
             });
       
-            const {token} = response.data;
+            const {token, data} = response.data;
             localStorage.setItem('token', token);
+            localStorage.setItem('user', JSON.stringify(data))
             setToken(token)
             navigate('/');
       

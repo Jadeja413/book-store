@@ -32,9 +32,9 @@ export function SignIn() {
               email: values.email,
               password: values.password,
             });
-
-            const { token } = response.data;
+            const { token, checkUser } = response.data;
             localStorage.setItem('token', token);
+            localStorage.setItem('user', JSON.stringify(checkUser))
             setToken(token)
             navigate('/');
 

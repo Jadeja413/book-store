@@ -4,7 +4,7 @@ import ReactLoading from "react-loading";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./ProductDetailsPage.css"
-import { BookDataContext, StorageContext } from './Context';
+import { BookDataContext, StorageContext, UserDataContext } from './Context';
 // import { TokenContext } from './ContextCreate';
 import axios from 'axios';
 
@@ -18,7 +18,8 @@ const ProductDetailsPage = () => {
 
   const books = useContext(BookDataContext);
   // const token = useContext(TokenContext);
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem('token');
+  const { setUserData } = useContext(UserDataContext);
 
   useEffect(() => {
 
@@ -40,23 +41,23 @@ const ProductDetailsPage = () => {
     //   }
     // };
 
-async function fetchBook() {
-    try {
-      const bookFetchData = await axios.get(`http://localhost:9000/books/${params.id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+    async function fetchBook() {
+      try {
+        const bookFetchData = await axios.get(`http://localhost:9000/books/${params.id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
 
-      setProduct(bookFetchData.data);
-    } catch (error) {
-      // toast.error('session is expired');
-      // localStorage.removeItem('token');
-      // navigate('/login');
-      console.log("eeeeeee", error)
+        setProduct(bookFetchData.data);
+      } catch (error) {
+        // toast.error('session is expired');
+        // localStorage.removeItem('token');
+        // navigate('/login');
+        console.log("eeeeeee", error)
+      }
     }
-  }
-  fetchBook();
+    fetchBook();
   }, [params.id]);
 
 
@@ -77,22 +78,52 @@ async function fetchBook() {
     });
   }
 
-  const handleAddToWishList = () => {
-    data.setWishList((list) => {
-      if (!list.some(item => item.id === product.id)) {
-        toast.success("Added To Your WishList!", {
-          position: toast.POSITION.TOP_CENTER,
-          autoClose: 1500
-        });
-        return list.concat({ id: product.id });
-      }
-      toast.success("Already Added To Your WishList!", {
+  const handleAddToWishList = async (productId) => {
+    // data.setWishList((list) => {
+    //   if (!list.some(item => item.id === product.id)) {
+    //     toast.success("Added To Your WishList!", {
+    //       position: toast.POSITION.TOP_CENTER,
+    //       autoClose: 1500
+    //     });
+    //     return list.concat({ id: product.id });
+    //   }
+    //   toast.success("Already Added To Your WishList!", {
+    //     position: toast.POSITION.TOP_CENTER,
+    //     autoClose: 1500
+    //   })
+    //   return list;
+    // }
+    // );
+
+    try {
+      const user = JSON.parse(localStorage.getItem('user'));
+
+      await axios.post('http://localhost:9000/wishlist/add',
+        { userId: user._id, bookId: productId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      setUserData((prev) => ({ ...prev, wishlistCount: prev.wishlistCount + 1 }));
+
+      const updatedUser = { ...user, wishlistCount: user.wishlistCount + 1 };
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+
+      toast.success('Added to your WishList!', {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 1500
+      });
+
+    } catch (error) {
+      toast.error(error.response.data.message, {
         position: toast.POSITION.TOP_CENTER,
         autoClose: 1500
       })
-      return list;
+      // console.log('error', error)
     }
-    );
+
   };
 
   return (
@@ -118,7 +149,7 @@ async function fetchBook() {
             {!btnTitle ?
               <button className="add-to-cart-btn" onClick={AddCartHandler}> Add to Cart </button> :
               <button className="add-to-cart-btn" onClick={() => { setBtnTitle(true); navigate("/cart") }}> Go to Cart </button>}
-            <button className="add-to-wish-btn" onClick={handleAddToWishList}> Add to WishList </button>
+            <button className="add-to-wish-btn" onClick={() => handleAddToWishList(product.id)}> Add to WishList </button>
             <ToastContainer />
           </div>
 

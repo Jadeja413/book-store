@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const {User} = require('../Schema');
+const {User, Wishlist} = require('../Schema');
 
 const signup = async (req, res, next) => {
   const { firstName, lastName, email, password } = req.body;
@@ -17,8 +17,8 @@ const signup = async (req, res, next) => {
       user.save();
 
       const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, {
-        expiresIn: '1 hour'
-      })
+        expiresIn: '1m'
+      });
 
       res.json({token, message: 'Registration successful', data: user });
     }
@@ -44,7 +44,16 @@ const login = async (req, res, next) => {
     const token = jwt.sign({ userId: checkUser._id }, process.env.SECRET_KEY, {
       expiresIn: '1 hour'
     });
-    res.json({ token, message: 'Login successful' });
+
+    const userId = checkUser._id;
+    const wishlist = await Wishlist.findOne({ userId });
+    const wishlistCount = wishlist?.books.length;
+    
+    const userData = checkUser.toObject();
+
+    res.json({ token, checkUser: {...userData, wishlistCount} , message: 'Login successful' });
+
+    // res.json({ token, checkUser, wishlistCount , message: 'Login successful' });
   } catch (error) {
     next(error)
   }
