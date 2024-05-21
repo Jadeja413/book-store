@@ -10,6 +10,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { TokenContext } from "./ContextCreate";
+import ReactLoading from "react-loading";
 
 export default function WishListComp() {
 
@@ -17,7 +18,7 @@ export default function WishListComp() {
   const bookData = useContext(BookDataContext);
   const data = useContext(StorageContext);
   const { setUserData } = useContext(UserDataContext);
-  const { token } = useContext(TokenContext)
+  const { token, setToken } = useContext(TokenContext)
 
   const navigate = useNavigate();
 
@@ -43,23 +44,79 @@ export default function WishListComp() {
         setWishList(response.data)
       } catch (error) {
         // toast.error(error.response.data.message)
-        console.log('error', error)
+        console.log('error', error);
+        if (error.response.data.message === 'jwt expired') {
+
+          toast.error('Session Expired.', {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 1500
+          })
+          localStorage.removeItem('token');
+          setToken(null);
+          navigate('/login');
+        }
       }
     }
     fetchList();
   }, [user._id])
 
-  function AddCartHandler(id) {
-    data.setCartList((list) => list.concat({ id: id }));
+  // function AddCartHandler(id) {
+  //   data.setCartList((list) => list.concat({ id: id }));
 
-    const filteredArray = data.wishList.filter(item => item.id !== id);
+  //   const filteredArray = data.wishList.filter(item => item.id !== id);
 
-    data.setWishList(filteredArray);
-    navigate("/cart");
-    toast.success("Added To Your Cart!", {
-      position: toast.POSITION.TOP_CENTER,
-      autoClose: 1500
-    });
+  //   data.setWishList(filteredArray);
+  //   navigate("/cart");
+  //   toast.success("Added To Your Cart!", {
+  //     position: toast.POSITION.TOP_CENTER,
+  //     autoClose: 1500
+  //   });
+  // }
+  const AddCartHandler = async (productId) => {
+    // data.setCartList((list) => list.concat({ id: productId }));
+
+    // const filteredArray = data.wishList.filter(item => item.id !== productId);
+
+    // data.setWishList(filteredArray);
+    // navigate("/cart");
+    // toast.success("Added To Your Cart!", {
+    //   position: toast.POSITION.TOP_CENTER,
+    //   autoClose: 1500
+    // });
+    // console.log("productId", productId)
+    // const user = JSON.parse(localStorage.getItem('user'));
+    try {
+      const response = await axios.post('http://localhost:9000/cart/add',
+        { userId: user._id, bookId: productId, bookQuantity: 1 },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      const cartLength = parseInt(response?.data?.cartlist.books.length);
+      setUserData((prev) => ({ ...prev, cartlistCount: cartLength }));
+
+
+      const updatedUser = { ...user, cartlistCount: cartLength };
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+
+      navigate("/cart");
+    } catch (error) {
+      if (error.response?.data.message === 'jwt expired') {
+        localStorage.clear();
+        setToken(null);
+        navigate('/login')
+      } else {
+        toast.error(error.response?.data.message, {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 1500
+        })
+        // console.log('error', error)
+      }
+    }
+
   }
 
   async function RemoveWishListHandler(id) {
@@ -90,12 +147,22 @@ export default function WishListComp() {
         autoClose: 1500
       });
     } catch (error) {
-      toast.error(error.response.data.message, {
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 1500
-      })
-      console.log('error', error)
+      if (error.response?.data.message === 'jwt expired') {
+        localStorage.clear();
+        setToken(null);
+        navigate('/login')
+      } else {
+        toast.error(error.response?.data.message, {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 1500
+        })
+        // console.log('error', error)
+      }
     }
+  }
+
+  if (!wishList) {
+    return <div style={{ minHeight: "81vh", display: "flex", justifyContent: "center", alignItems: "center" }}><ReactLoading type={"spin"} color={"black"} height={60} width={60} /></div>;
   }
 
   return (

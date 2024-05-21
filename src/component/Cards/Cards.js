@@ -8,16 +8,29 @@ import "slick-carousel/slick/slick-theme.css";
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import { BookDataContext } from '../Context';
+import { Grid } from '@mui/material';
 
 export default function Cards(props) {
 
   const { type, titleOf, onPath } = props;
-  // const [movieData, setMovieData] = useState([]);
 
   const navigate = useNavigate();
   const bookData = useContext(BookDataContext);
+  const [width, setWidth] = useState(window.innerWidth);
 
   const filteredData = bookData.filter((item) => (item.genre).includes(type));
+
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+    }
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
 
   function SampleNextArrow(props) {
     const { className, style, onClick } = props;
@@ -42,12 +55,25 @@ export default function Cards(props) {
       <div><NavigateBeforeIcon className={className} style={{ ...style, color: "black" }} onClick={onClick} /></div>
     );
   }
+  const getSlidesToShow = () => {
+    if (width >= 1600) {
+      return filteredData?.length >= 5 ? 5 : filteredData.length;
+    } else if (width >= 1400) {
+      return filteredData?.length >= 4 ? 4 : filteredData.length;
+    } else if (width >= 1030) {
+      return filteredData?.length >= 3 ? 3 : filteredData.length;
+    } else if (width >= 730) {
+      return filteredData?.length >= 2 ? 2 : filteredData.length;
+    } else {
+      return 1;
+    }
+  };
 
   const settings = {
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: filteredData.length > 5 ? 5 : filteredData.length,
+    slidesToShow: getSlidesToShow(),
     slidesToScroll: 1,
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
@@ -69,7 +95,8 @@ export default function Cards(props) {
         <Slider {...settings}>
           {
             filteredData.map(book => (
-              <div key={book.id} style={{ width: "20%" }}>
+              // <div key={book.id} style={{display: "flex", flexWrap: 'wrap'}}>
+              <Grid >
                 <CardFormat
                   id={book.id}
                   name={book.title}
@@ -78,7 +105,8 @@ export default function Cards(props) {
                   author={book.author}
                   year={book.publication_year}
                 />
-              </div>
+              </Grid>
+              // </div>
             ))
           }
         </Slider>

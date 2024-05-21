@@ -9,7 +9,7 @@ const ProtectedRoutes = () => {
 
   return (
     <>
-      {token ? <Outlet /> : <Navigate to='/login' />}
+      {token ? <Outlet /> : (<Navigate to='/login' /> )}
       {/* {isAuthenticated ? <Outlet /> : <Navigate to='/login' />} */}
     </>
   )

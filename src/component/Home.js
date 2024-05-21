@@ -10,7 +10,7 @@ export default function Home() {
       <Cards type={"Fiction"} onPath={"/fiction"} titleOf={"Fictional Books"} />
       <Cards type={"Classic"} onPath={"/classic"} titleOf={"Classical Books"} />
       <Cards type={"Adventure"} onPath={"/adventure"} titleOf={"Adventure Books"} />
-      {/* <Cards type={"Comedy"} onPath={"/Comedy"} titleOf={"Comedy Books"} /> */}
+      <Cards type={"Comedy"} onPath={"/Comedy"} titleOf={"Comedy Books"} />
     </div>
   )
 }

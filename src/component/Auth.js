@@ -22,12 +22,14 @@ import axios from "axios";
 
 export default function Auth() {
   const initialUserData = {
-    wishlistCount: JSON.parse(localStorage.getItem('user')).wishlistCount || 0,
+    wishlistCount: JSON.parse(localStorage.getItem('user'))?.wishlistCount || 0,
+    cartlistCount: JSON.parse(localStorage.getItem('user'))?.cartlistCount || 0,
   };
 
   const [bookData, setBookData] = useState([]);
   const [userData, setUserData] = useState(initialUserData);
 
+  const user = JSON.parse(localStorage.getItem('user'));
   const { token, setToken } = useContext(TokenContext);
   const navigate = useNavigate();
 
@@ -45,7 +47,7 @@ export default function Auth() {
 
       } catch (error) {
         if (error.response.data.message === 'jwt expired') {
-          toast.error('session is expired! /n Please LogIn again.');
+          toast.error('session is expired!');
           localStorage.removeItem('token');
           setToken(null);
           navigate('/login');
@@ -57,7 +59,7 @@ export default function Auth() {
     }
     Checker();
 
-  }, [token]);
+  }, [token, setToken]);
 
   return (
     <div>

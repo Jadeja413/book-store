@@ -26,7 +26,7 @@ const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Dashboard', 'Logout'];
 
 function ResponsiveAppBar() {
-// console.log("userData", userData.wishlistCount)
+  // console.log("userData", userData.wishlistCount)
 
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -116,7 +116,7 @@ function ResponsiveAppBar() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem key={page} onClick={() => handleCloseNavMenu(page)}>
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
@@ -126,8 +126,9 @@ function ResponsiveAppBar() {
           <Typography
             variant="h5"
             noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
+            // component="a"
+            // href="#app-bar-with-responsive-menu"
+            onClick={() => navigate('/')}
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -137,6 +138,7 @@ function ResponsiveAppBar() {
               letterSpacing: '.3rem',
               color: 'inherit',
               textDecoration: 'none',
+              cursor: 'pointer'
             }}
           >
             Books
@@ -163,9 +165,9 @@ function ResponsiveAppBar() {
               color="inherit"
             >
               <Badge badgeContent={userData?.wishlistCount} color="info">
-              {/* <Badge badgeContent={(new Set(data?.wishList.map(obj => obj.id))).size} color="info"> */}
+                {/* <Badge badgeContent={(new Set(data?.wishList.map(obj => obj.id))).size} color="info"> */}
                 <FavoriteTwoToneIcon htmlColor="white" />
-              {/* </Badge> */}
+                {/* </Badge> */}
               </Badge>
             </IconButton>
 
@@ -177,9 +179,11 @@ function ResponsiveAppBar() {
               onClick={() => navigate("/cart")}
               color="inherit"
             >
-              <Badge badgeContent={(new Set(data?.cartList.map(obj => obj.id))).size} color="info">
+              {/* <Badge badgeContent={(new Set(data?.cartList.map(obj => obj.id))).size} color="info"> */}
+              <Badge badgeContent={userData?.cartlistCount} color="info">
                 <ShoppingCartRoundedIcon htmlColor="white" />
               </Badge>
+              {/* </Badge> */}
             </IconButton>
 
             <Tooltip title="Open settings">

@@ -14,10 +14,10 @@ export default function RecommendedBooks({ type }) {
       <div>
         <Typography variant="h3" sx={{ margin: "20px 30px" }}>{type || "All"} Books</Typography>
       </div>
-      <Grid container spacing={2} sx={{ padding: "20px" }}>
+      <Grid container  sx={{ padding: "20px", margin: '10px' }}>
         {
           filteredData.map(book => (
-            <Grid key={book.id} item xs={12} sm={6} md={4} lg={3} xl={2}>
+            <Grid key={book.id} item xs={12} sm={6} md={4} lg={3} xl={2} >
               <CardFormat
                 id={book.id}
                 name={book.title}

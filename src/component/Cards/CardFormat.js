@@ -37,7 +37,7 @@ export function CardFormat(props) {
 
   const data = useContext(StorageContext);
   const { setUserData } = useContext(UserDataContext);
-  const { token } = useContext(TokenContext);
+  const { token, setToken } = useContext(TokenContext);
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -73,12 +73,12 @@ export function CardFormat(props) {
           userId: user._id, bookId: id,
 
         }, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       }
       );
-      console.log('resp', response);
+      // console.log('resp', response);
       // setUserData({...userData, wishlistCount: userData.wishlistCount + 1})
       setUserData((prev) => ({ ...prev, wishlistCount: prev.wishlistCount + 1 }));
 
@@ -95,17 +95,23 @@ export function CardFormat(props) {
       // console.log('localS', localS)
       // console.log('updatedLocal', updatedLocal)
     } catch (error) {
-      toast.error(error.response.data.message, {
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 1500
-      })
-      // console.log('error', error)
+      if (error.response?.data.message === 'jwt expired') {
+        localStorage.clear();
+        setToken(null);
+        navigate('/login')
+      } else {
+        toast.error(error.response?.data.message, {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 1500
+        })
+        // console.log('error', error)
+      }
     }
   }
 
   return (
     <div style={{ margin: "20px 20px" }} >
-      <Card sx={{ height: 400, position: "relative" }}>
+      <Card sx={{ height: 400, position: "relative", width: '280px' }}>
         <IconButton
           onClick={() => AddToWishListHandler(id)}
           style={{ zIndex: "1", position: "absolute", right: "0px", top: "0px", color: "gray" }}
@@ -121,11 +127,25 @@ export function CardFormat(props) {
           image={image}
         />
         <CardContent >
-          <Typography onClick={() => navigate(`/product/${id}`)} gutterBottom variant="h5" component="div" sx={{ height: 60, overflow: "hidden", cursor: "pointer" }}>
-            <Tooltip title={name}>
+          <Tooltip
+            title={name}
+            placement="top-start"
+            slotProps={{
+              popper: {
+                modifiers: [
+                  {
+                    name: 'offset',
+                    options: {
+                      offset: [0, -14],
+                    },
+                  },
+                ],
+              },
+            }}>
+            <Typography onClick={() => navigate(`/product/${id}`)} gutterBottom variant="h5" component="div" sx={{ height: 60, overflow: "hidden", cursor: "pointer" }}>
               {name}
-            </Tooltip>
-          </Typography>
+            </Typography>
+          </Tooltip>
           <Typography variant="body2" color="text.secondary" sx={{ height: 80, overflow: "auto", scrollbarWidth: "none", '&::-webkit-scrollbar': { display: 'none' } }}>
             {description}
           </Typography>

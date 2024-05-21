@@ -16,7 +16,6 @@ const wishLists = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error });
   }
-
 }
 
 const addToWishlist = async (req, res) => {
@@ -39,7 +38,7 @@ const addToWishlist = async (req, res) => {
     wishlist.books.push({ bookId });
     await wishlist.save();
 
-    const wishlistCount = wishlist.books?.length;
+    const wishlistCount = wishlist?.books?.length;
     console.log('add wish', wishlist.books?.length)
     res.status(200).json({ message: 'Added To Your WishList!', wishlistCount });
 

@@ -100,7 +100,7 @@ export default function FAQ() {
         </form>
       </Box>
       <Box sx={{ maxWidth: 'xl', margin: 'auto' }}>
-        <Accordion elevation={0} borderBottom='2px solid gray' square disableGutters expanded={expanded === 'panel1'} onChange={handleChange('panel1')} sx={{ marginTop: '1px', borderBottom: '1px gray', borderTop: '1px gray' }}>
+        <Accordion elevation={0}  square disableGutters expanded={expanded === 'panel1'} onChange={handleChange('panel1')} sx={{ marginTop: '1px', borderBottom: '1px gray', borderTop: '1px gray' }}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1bh-content"

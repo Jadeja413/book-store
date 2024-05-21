@@ -20,8 +20,10 @@ function App() {
   const [cartList, setCartList] = useState([]);
 
   const [token, setToken] = useState(localStorage.getItem('token'));
-  
 
+  useEffect(() => {
+    setToken(token);
+  }, [token]);
   // const navigate = useNavigate();
 
   // useEffect(() => {
@@ -44,13 +46,13 @@ function App() {
   //     .catch (console.error())
   // }, [token]);
 
-  useEffect(() => {
-    localStorage.setItem("wishList", JSON.stringify(wishList));
-  }, [wishList]);
+  // useEffect(() => {
+  //   localStorage.setItem("wishList", JSON.stringify(wishList));
+  // }, [wishList]);
 
-  useEffect(() => {
-    localStorage.setItem("cartList", JSON.stringify(cartList));
-  }, [cartList]);
+  // useEffect(() => {
+  //   localStorage.setItem("cartList", JSON.stringify(cartList));
+  // }, [cartList]);
 
   return (
     <div className="App" style={{ minHeight: "100vh" }}>
@@ -62,9 +64,9 @@ function App() {
           </TokenContext.Provider>
         </div>
 
+          <ToastContainer />
         <div >
           {/* <Footer /> */}
-          <ToastContainer />
         </div>
 
       </StorageContext.Provider>

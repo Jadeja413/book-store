@@ -26,11 +26,6 @@ const userSchema = new mongoose.Schema({
     enum: ['admin', 'user'],
     default: 'user'
   },
-  // wishList: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: 'WishList'
-  // }
-  // token: String,
 }, { timestamps: true });
 
 const bookSchema = new mongoose.Schema({
@@ -43,33 +38,6 @@ const bookSchema = new mongoose.Schema({
   price: Number
 });
 
-// const orderSchema = new mongoose.Schema({
-//   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-//   subTotal: { type: Number, required: true },
-//   total: { type: Number, required: true },
-//   status: { type: String, default: 'in_cart' },
-// });
-
-// const orderItemSchema = new mongoose.Schema({
-//   order: { type: mongoose.Schema.Types.ObjectId, ref: 'Order' },
-//   product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
-//   quantity: { type: Number, required: true },
-//   totalPrice: { type: Number, required: true },
-// });
-
-// const wishListSchema = new mongoose.Schema({
-//   user: {
-//     type: mongoose.Schema.Types.ObjectId,
-//     ref: 'User',
-//     required: true
-//   },
-//   books: [{
-//     type: mongoose.Schema.Types.ObjectId,
-//     ref: 'Book',
-//     required: true
-//   }]
-// }, { timestamps: true });
-
 const WishBookSchema = new mongoose.Schema({
   bookId: { type: Number, required: true, unique: true }
 });
@@ -77,7 +45,17 @@ const WishBookSchema = new mongoose.Schema({
 // Define the schema for the wishlist
 const WishlistSchema = new mongoose.Schema({
   userId: { type: String, required: true },
-  books: [WishBookSchema] // Array of books
+  books: [WishBookSchema]
+});
+
+const CartItemSchema = new mongoose.Schema({
+  bookId: { type: Number, required: true, unique: true },
+  bookQuantity: { type: Number, required: true },
+});
+
+const CartItemListSchema = new mongoose.Schema({
+  userId: { type: String, required: true },
+  books: [CartItemSchema]
 });
 
 //hashing the password before save
@@ -103,15 +81,12 @@ userSchema.methods.comparePassword = async function (password) {
   if (typeof password !== 'string') {
     return false;
   }
-  
   return bcrypt.compare(password, this.password);
 }
 
 const User = mongoose.model("USER", userSchema);
 const Book = mongoose.model("BOOK", bookSchema);
-// const Order = mongoose.model('Order', orderSchema);
-// const OrderItem = mongoose.model('OrderItem', orderItemSchema);
 const Wishlist = mongoose.model('Wishlist', WishlistSchema);
+const CartItemList = mongoose.model('cartlist', CartItemListSchema);
 
-
-module.exports = { User, Book, Wishlist };
+module.exports = { User, Book, Wishlist, CartItemList };

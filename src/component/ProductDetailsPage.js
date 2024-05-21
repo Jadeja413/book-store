@@ -7,6 +7,7 @@ import "./ProductDetailsPage.css"
 import { BookDataContext, StorageContext, UserDataContext } from './Context';
 // import { TokenContext } from './ContextCreate';
 import axios from 'axios';
+import { TokenContext } from './ContextCreate';
 
 const ProductDetailsPage = () => {
   const [product, setProduct] = useState(null);
@@ -16,10 +17,12 @@ const ProductDetailsPage = () => {
   const params = useParams();
   const navigate = useNavigate();
 
-  const books = useContext(BookDataContext);
-  // const token = useContext(TokenContext);
-  const token = localStorage.getItem('token');
+  // const books = useContext(BookDataContext);
+  const { token, setToken } = useContext(TokenContext);
+  // const token = localStorage.getItem('token');
   const { setUserData } = useContext(UserDataContext);
+
+  const user = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
 
@@ -51,15 +54,14 @@ const ProductDetailsPage = () => {
 
         setProduct(bookFetchData.data);
       } catch (error) {
-        // toast.error('session is expired');
-        // localStorage.removeItem('token');
-        // navigate('/login');
+        toast.error('session is expired');
+        localStorage.clear();
+        navigate('/login');
         console.log("eeeeeee", error)
       }
     }
     fetchBook();
   }, [params.id]);
-
 
   const handleQuantityChange = (e) => {
     setQuantity(parseInt(e.target.value, 10));
@@ -69,13 +71,53 @@ const ProductDetailsPage = () => {
     return <div style={{ minHeight: "81vh", display: "flex", justifyContent: "center", alignItems: "center" }}><ReactLoading type={"spin"} color={"black"} height={60} width={60} /></div>;
   }
 
-  function AddCartHandler() {
-    setBtnTitle(true);
-    data.setCartList((list) => list.concat({ id: product.id }));
-    toast.success("Added To Your Cart!", {
-      position: toast.POSITION.TOP_CENTER,
-      autoClose: 1500
-    });
+  const AddCartHandler = async (productId) => {
+    // setBtnTitle(true);
+    // data.setCartList((list) => list.concat({ id: product.id }));
+    // toast.success("Added To Your Cart!", {
+    //   position: toast.POSITION.TOP_CENTER,
+    //   autoClose: 1500
+    // });
+    // console.log("productId", productId);
+    // const user = JSON.parse(localStorage.getItem('user'));
+    try {
+
+      const response = await axios.post('http://localhost:9000/cart/add',
+        { userId: user._id, bookId: productId, bookQuantity: quantity },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      const cartLength = parseInt(response?.data?.cartlist.books.length);
+      setUserData((prev) => ({ ...prev, cartlistCount: cartLength }));
+
+      setBtnTitle(true);
+
+      const updatedUser = { ...user, cartlistCount: cartLength };
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+
+      toast.success("Added To Your Cart!", {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 1500
+      });
+    } catch (error) {
+      if (error.response.data.message === 'jwt expired') {
+        toast.error('Session Expired.', {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 1500
+        });
+        localStorage.clear();
+        navigate('/login');
+      } else {
+        toast.error(error.response.data.message, {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 1500
+        });
+      }
+    }
   }
 
   const handleAddToWishList = async (productId) => {
@@ -96,8 +138,6 @@ const ProductDetailsPage = () => {
     // );
 
     try {
-      const user = JSON.parse(localStorage.getItem('user'));
-
       await axios.post('http://localhost:9000/wishlist/add',
         { userId: user._id, bookId: productId },
         {
@@ -117,10 +157,17 @@ const ProductDetailsPage = () => {
       });
 
     } catch (error) {
-      toast.error(error.response.data.message, {
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 1500
-      })
+      if (error.response?.data.message === 'jwt expired') {
+        toast.error('session is expired!');
+        localStorage.removeItem('token');
+        setToken(null);
+        navigate('/login');
+      } else {
+        toast.error(error.response.data.message, {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 1500
+        })
+      }
       // console.log('error', error)
     }
 
@@ -147,7 +194,7 @@ const ProductDetailsPage = () => {
           </div>
           <div>
             {!btnTitle ?
-              <button className="add-to-cart-btn" onClick={AddCartHandler}> Add to Cart </button> :
+              <button disabled={quantity === 0} className="add-to-cart-btn" onClick={() => AddCartHandler(product.id)}> Add to Cart </button> :
               <button className="add-to-cart-btn" onClick={() => { setBtnTitle(true); navigate("/cart") }}> Go to Cart </button>}
             <button className="add-to-wish-btn" onClick={() => handleAddToWishList(product.id)}> Add to WishList </button>
             <ToastContainer />

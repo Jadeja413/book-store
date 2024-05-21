@@ -8,7 +8,7 @@ export function Footer() {
       <div>||</div>
       <div>Top Rated</div>
       <div>||</div>
-      <div>Places</div>
+      <div><Link to="/faq" style={{color: "white"}}>FAQ</Link></div>
       {/* <div>||</div>
       <div>Rating</div> */}
       <div>||</div>
