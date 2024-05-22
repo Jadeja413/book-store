@@ -109,6 +109,11 @@ export function CardFormat(props) {
     }
   }
 
+  const buyHandler = async (event) => {
+    event.stopPropagation();
+    navigate(`/product/${id}`);
+  }
+
   return (
     <div style={{ margin: "20px 20px" }} >
       <Card sx={{ height: 400, position: "relative", width: '280px' }}>
@@ -176,7 +181,7 @@ export function CardFormat(props) {
               </Typography>
             </Box>
           </Modal>
-          <Button size="small" variant="contained" sx={{ textWrap: "nowrap" }} onClick={(e) => { e.stopPropagation(); navigate(`/product/${id}`) }}>BUY Now</Button>
+          <Button size="small" variant="contained" sx={{ textWrap: "nowrap" }} onClick={buyHandler}>BUY Now</Button>
         </CardActions>
       </Card>
     </div>

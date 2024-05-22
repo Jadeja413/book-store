@@ -59,7 +59,7 @@ export default function Auth() {
     }
     Checker();
 
-  }, [token, setToken]);
+  }, [token]);
 
   return (
     <div>
@@ -68,7 +68,7 @@ export default function Auth() {
           <ResponsiveAppBar />
           <Routes >
             <Route element={<ProtectedRoutes />} >
-              <Route path="/" element={<Home />} />
+              <Route path="/" exact element={<Home />} />
               <Route path="/products" element={<RecommendedBooks />} />
               <Route path="/fiction" element={<RecommendedBooks type={"Fiction"} />} />
               <Route path="/classic" element={<RecommendedBooks type={"Classic"} />} />

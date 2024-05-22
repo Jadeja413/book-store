@@ -7,6 +7,7 @@ import * as Yup from 'yup';
 import axios from "axios";
 import { TokenContext } from "../../ContextCreate";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
@@ -43,11 +44,17 @@ export function SignUp() {
             navigate('/');
       
           } catch (error) {
+            if ( error.response?.data.message === 'User Already Exits' ) {
+              toast.error('User Already Exits', {
+                position: toast.POSITION.TOP_CENTER,
+                autoClose: 1500
+              })
+            }
             console.error('Error signing up:', error.message);
-            // toast.error(error.response.data.message, {
-            //   // position: toast.POSITION.TOP_CENTER,
-            //   autoClose: 1500
-            // });
+            toast.error(error.response?.data.message, {
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose: 1500
+            });
           }
         }}
       >

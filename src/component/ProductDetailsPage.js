@@ -56,6 +56,7 @@ const ProductDetailsPage = () => {
       } catch (error) {
         toast.error('session is expired');
         localStorage.clear();
+        setToken(null);
         navigate('/login');
         console.log("eeeeeee", error)
       }

@@ -21,9 +21,9 @@ function App() {
 
   const [token, setToken] = useState(localStorage.getItem('token'));
 
-  useEffect(() => {
-    setToken(token);
-  }, [token]);
+  // useEffect(() => {
+  //   setToken(token);
+  // }, [token]);
   // const navigate = useNavigate();
 
   // useEffect(() => {

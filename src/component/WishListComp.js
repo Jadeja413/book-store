@@ -136,7 +136,6 @@ export default function WishListComp() {
           }
         }
       );
-      console.log(response.data, "response remove");
       setUserData((prev) => ({ ...prev, wishlistCount: prev.wishlistCount - 1 }));
 
       const updatedUser = { ...user, wishlistCount: user.wishlistCount - 1 };

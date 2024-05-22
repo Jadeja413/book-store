@@ -96,7 +96,7 @@ export default function Cards(props) {
           {
             filteredData.map(book => (
               // <div key={book.id} style={{display: "flex", flexWrap: 'wrap'}}>
-              <Grid >
+              <Grid key={book.id}>
                 <CardFormat
                   id={book.id}
                   name={book.title}

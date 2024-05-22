@@ -27,6 +27,7 @@ export default function Cart() {
 
   const [cartItem, setCartItem] = useState([])
   const [updateCart, setUpdateCart] = useState(false);
+  const [isCheckout, setIsCheckout] = useState(false);
 
   const navigate = useNavigate();
 
@@ -127,8 +128,8 @@ export default function Cart() {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 1500
         })
+        console.log('error', error);
       }
-      console.log('error', error)
     }
 
   };
@@ -151,9 +152,7 @@ export default function Cart() {
 
       fetchList();
     } catch (error) {
-      console.log('error', error);
-      if (error.response.data.message === 'jwt expired') {
-
+      if (error.response?.data.message === 'jwt expired') {
         toast.error('Session Expired.', {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 1500
@@ -161,6 +160,8 @@ export default function Cart() {
         localStorage.removeItem('token');
         setToken(null);
         navigate('/login');
+      } else {
+        console.log('error', error);
       }
     }
   }
@@ -210,16 +211,32 @@ export default function Cart() {
     // console.log("productId", productId)
     // const user = JSON.parse(localStorage.getItem('user'));
 
-    await axios.post('http://localhost:9000/cart/delete',
-      { userId: user._id, bookId: productId, bookQuantity: 1 },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
+    try {
+      await axios.post('http://localhost:9000/cart/delete',
+        { userId: user._id, bookId: productId, bookQuantity: 1 },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
+      );
+      // setUpdateCart(!updateCart)
+      fetchList();
+    } catch (error) {
+
+      if (error.response?.data.message === 'jwt expired') {
+
+        toast.error('Session Expired.', {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 1500
+        })
+        localStorage.removeItem('token');
+        setToken(null);
+        navigate('/login');
+      } else {
+        console.log('error', error);
       }
-    );
-    // setUpdateCart(!updateCart)
-    fetchList();
+    }
   }
 
   return (
@@ -243,7 +260,8 @@ export default function Cart() {
               Looks like you haven’t added anything to your cart yet
             </Typography>
             <Button variant="contained" onClick={() => navigate("/products")}>Browse Products</Button>
-          </Box> :
+          </Box>
+          :
           <Grid sx={{ margin: "50px 50px" }} >
             <Box>
               <Typography variant="h5" >Cart Items</Typography>
@@ -289,7 +307,7 @@ export default function Cart() {
                               <Button disabled={book.bookQuantity < 2} onClick={() => DeleteCartCountHandler(book.id)}> <RemoveOutlinedIcon /> </Button>
                               {book.bookQuantity}
                               <Button onClick={() => AddCartHandler(book.id)}> <AddOutlinedIcon /> </Button>
-                              <Button sx={{ borderLeft: '1px solid gray', borderRadius: '0px', color: 'red' }} onClick={() => removeHandler(book.id)} > <DeleteOutlineTwoToneIcon />Remove </Button>
+                              <Button sx={{ borderLeft: '1px solid gray', borderRadius: '0px', color: 'red' }} onClick={() => removeHandler(book.id)} > <DeleteOutlineTwoToneIcon /> Remove </Button>
                             </Box>
 
                           </div>
@@ -335,19 +353,24 @@ export default function Cart() {
                     <Box sx={{ display: 'flex', justifyContent: 'space-around', margin: '10px 50px' }}>
                       <Typography variant="overline" fontSize={15}> Items Total </Typography>
                       <Typography variant="overline" fontSize={15}>
-                        ₹ {TotalAmount}
+                        ₹: {TotalAmount}
                       </Typography>
                     </Box>
 
                     <Divider />
 
                     <Box sx={{ display: "grid", margin: '30px 50px' }}>
-                      <Elements stripe={stripePromise}>
-                        <StripeCheckoutForm amount={(cartItem?.reduce((acc, item) => acc + item.bookQuantity * item.price, 0) || 0) * 100} />
-                      </Elements>
-                      {/* <Button variant="contained" align="center"> Proceed to Checkout </Button> */}
+                      {/* <Button variant="contained" align="center" onClick={() => setIsCheckout(true)}> Proceed to Checkout </Button> */}
+                      {
+                        !isCheckout
+                          ?
+                          <Button variant="contained" align="center" onClick={() => setIsCheckout(true)}> Proceed to Checkout </Button>
+                          :
+                          <Elements stripe={stripePromise}>
+                            <StripeCheckoutForm amount={(TotalAmount) * 100} />
+                          </Elements>
+                      }
                     </Box>
-
                   </Grid>
                 </Paper>
               </Grid>
