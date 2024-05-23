@@ -1,6 +1,6 @@
 const express = require('express');
 const authenticate = require('../controller/authenticate');
-const { Book, User, Order, OrderItem } = require("../Schema");
+const { Book } = require("../Schema");
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
@@ -8,10 +8,16 @@ const router = express.Router();
 
 
 router.get('/', authenticate, async (req, res) => {
-
+  const { title, price } = req.query;
   try {
-    const books = await Book.find();
-    res.json(books);
+    let books;
+    if (title) {
+      const titileRegex = new RegExp(title, 'i');
+      books = await Book.find({ title: titileRegex})
+    } else {
+     books = await Book.find();
+  }
+  res.json(books);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
