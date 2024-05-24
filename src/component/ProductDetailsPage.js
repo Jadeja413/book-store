@@ -8,6 +8,7 @@ import { BookDataContext, StorageContext, UserDataContext } from './Context';
 // import { TokenContext } from './ContextCreate';
 import axios from 'axios';
 import { TokenContext } from './ContextCreate';
+import { Box, Container, Rating, TextField, Typography } from '@mui/material';
 
 const ProductDetailsPage = () => {
   const [product, setProduct] = useState(null);
@@ -58,7 +59,7 @@ const ProductDetailsPage = () => {
         localStorage.clear();
         setToken(null);
         navigate('/login');
-        console.log("eeeeeee", error)
+        console.log("error", error)
       }
     }
     fetchBook();
@@ -117,6 +118,7 @@ const ProductDetailsPage = () => {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 1500
         });
+        console.log('error', error);
       }
     }
   }
@@ -168,46 +170,78 @@ const ProductDetailsPage = () => {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 1500
         })
+        console.log('error', error);
       }
-      // console.log('error', error)
     }
 
   };
 
   return (
-    <div style={{ minHeight: "81vh", display: "flex", alignItems: "center" }}>
-      <div className="product-details-container" style={{ minHeight: "40vh" }}>
-        <div className="product-details-image">
+    <Container sx={{ minHeight: "81vh", display: "flex", alignItems: "center" }}>
+      <Box className="product-details-container">
+        <Box className="product-details-image">
           <img src={product.image} alt={product.title} />
-        </div>
-        <div className="product-details-info">
-          <h2>{product.title}</h2>
-          <p className="product-price">₹ {product?.price}</p>
-          <div className="quantity-section">
-            <label htmlFor="quantity">Quantity:</label>
-            <input
+        </Box>
+        <Box className="product-details-info">
+          <Typography variant="h4" component="div">
+            {product.title}
+          </Typography>
+          <Typography variant="h5" color="text.secondary" gutterBottom>
+            ₹ {product.price}
+          </Typography>
+          <Box className="quantity-section" sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
+            <Typography variant="body1" sx={{ mr: 2 }}>Quantity:</Typography>
+            <TextField
               type="number"
               id="quantity"
-              min="1"
+              variant="outlined"
+              size="small"
+              inputProps={{ min: 1 }}
               value={quantity}
               onChange={handleQuantityChange}
+              sx={{ width: '100px' }}
             />
-          </div>
-          <div>
+          </Box>
+          <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
+            <Rating value={product.rating} readOnly />
+            <Typography variant="body2" sx={{ ml: 1 }}>
+              {product.reviewsCount} Reviews
+            </Typography>
+          </Box>
+          <Box sx={{ mt: 2 }}>
             {!btnTitle ?
-              <button disabled={quantity === 0} className="add-to-cart-btn" onClick={() => AddCartHandler(product.id)}> Add to Cart </button> :
-              <button className="add-to-cart-btn" onClick={() => { setBtnTitle(true); navigate("/cart") }}> Go to Cart </button>}
-            <button className="add-to-wish-btn" onClick={() => handleAddToWishList(product.id)}> Add to WishList </button>
-            <ToastContainer />
-          </div>
-
-          <div className="product-description">
-            <h3>Description:</h3>
-            <p>{product.description}</p>
-          </div>
-        </div>
-      </div>
-    </div>
+              <button
+                className="add-to-cart-btn"
+                disabled={quantity === 0}
+                onClick={() => AddCartHandler(product.id)}
+              >
+                Add to Cart
+              </button> :
+              <button
+                className="add-to-cart-btn"
+                onClick={() => { setBtnTitle(true); navigate("/cart") }}
+              >
+                Go to Cart
+              </button>}
+            <button
+              className="add-to-wish-btn"
+              onClick={() => handleAddToWishList(product.id)}
+            >
+              Add to WishList
+            </button>
+          </Box>
+          <ToastContainer />
+          <Box className="product-description">
+            <Typography variant="h6">
+              Description:
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {product.description}
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
+    </Container>
   );
 };
 

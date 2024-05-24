@@ -19,6 +19,7 @@ import { useContext, useEffect, useState } from "react";
 import { TokenContext } from "./ContextCreate";
 import { toast } from "react-toastify";
 import axios from "axios";
+import Footer from "./Footer";
 
 export default function Auth() {
   const initialUserData = {
@@ -86,6 +87,7 @@ export default function Auth() {
             </Route>
           </Routes>
         </BookDataContext.Provider>
+        <Footer />
       </UserDataContext.Provider>
     </div>
   )

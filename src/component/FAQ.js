@@ -59,7 +59,7 @@ export default function FAQ() {
   };
 
   return (
-    <div>
+    <div style={{ minHeight: "100vh" }}>
       {/* <Grid container>
         <Grid item>
 

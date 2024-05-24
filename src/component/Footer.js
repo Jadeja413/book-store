@@ -1,18 +1,62 @@
-import { Link } from "react-router-dom";
+import React from 'react';
+import { Container, Grid, Box, Typography, Link } from '@mui/material';
+import { Facebook, Twitter, Instagram } from '@mui/icons-material';
 
-export function Footer() {
-
+const Footer = () => {
   return (
-    <div style={{ display: "flex", justifyContent: "space-around", alignItems: "center", color: "white", left: "0", right: "0", bottom: "0", height: "100px", backgroundColor: "gray", padding:"10px 20px", textDecoration: "underline"}}>
-      <div><Link to="/" style={{color: "white"}}>Home</Link></div>
-      <div>||</div>
-      <div>Top Rated</div>
-      <div>||</div>
-      <div><Link to="/faq" style={{color: "white"}}>FAQ</Link></div>
-      {/* <div>||</div>
-      <div>Rating</div> */}
-      <div>||</div>
-      <div><Link to="/contact" style={{color: "white"}}>Contact Us</Link></div>
-    </div>
-  )
-}
+    <Box sx={{ backgroundColor: 'rgba(0, 0, 0, 0.87)', color: 'white', py: 3 }}>
+      <Container maxWidth="lg">
+        <Grid container spacing={4}>
+          <Grid item xs={12} sm={4}>
+            <Typography variant="h6" gutterBottom>
+              About Us
+            </Typography>
+            <Typography variant="body2">
+              We are a leading e-commerce platform providing a wide range of books. Our mission is to promote reading culture by offering a diverse selection of books at competitive prices.
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <Typography variant="h6" gutterBottom>
+              Quick Links
+            </Typography>
+            <Link href="/" color="inherit" variant="body2" display="block" gutterBottom>
+              Home
+            </Link>
+            {/* <Link href="/about" color="inherit" variant="body2" display="block" gutterBottom>
+              About
+            </Link> */}
+            <Link href="/contact" color="inherit" variant="body2" display="block" gutterBottom>
+              Contact
+            </Link>
+            <Link href="/faq" color="inherit" variant="body2" display="block" gutterBottom>
+              FAQ
+            </Link>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <Typography variant="h6" gutterBottom>
+              Follow Us
+            </Typography>
+            <Box display="flex">
+              <Link href="https://www.facebook.com" color="inherit" sx={{ mr: 1 }}>
+                <Facebook />
+              </Link>
+              <Link href="https://www.twitter.com" color="inherit" sx={{ mr: 1 }}>
+                <Twitter />
+              </Link>
+              <Link href="https://www.instagram.com" color="inherit">
+                <Instagram />
+              </Link>
+            </Box>
+          </Grid>
+        </Grid>
+        <Box textAlign="center" mt={4}>
+          <Typography variant="body2">
+            © {new Date().getFullYear()} Book Store. All rights reserved.
+          </Typography>
+        </Box>
+      </Container>
+    </Box>
+  );
+};
+
+export default Footer;
