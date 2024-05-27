@@ -17,7 +17,7 @@ import axios from "axios";
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import StripeCheckoutForm from "./CartCheckout";
-// import "./Cart.css"
+import ReactLoading from "react-loading";
 
 const stripePromise = loadStripe('pk_test_51PGLfGSIADDoIVWIwJjSUdRvlDVEsipi0AUKgDjP6gMlkH8zJiVKmGOvd7fa1Nd4WYdy7yC8DMmLFHu1EYTjEFTl00odZntT6O');
 
@@ -28,6 +28,7 @@ export default function Cart() {
   const [cartItem, setCartItem] = useState([])
   const [updateCart, setUpdateCart] = useState(false);
   const [isCheckout, setIsCheckout] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -51,7 +52,8 @@ export default function Cart() {
       );
       // console.log(response.data, "response====")
       // toast.success('Added to your WishList!');
-      setCartItem(response?.data || [])
+      setCartItem(response?.data || []);
+      setIsLoading(true);
     } catch (error) {
       // toast.error(error.response.data.message)
       console.log('error', error);
@@ -239,11 +241,15 @@ export default function Cart() {
     }
   }
 
+  if ( !cartItem.length && !isLoading ) {
+    return <div style={{ minHeight: "81vh", display: "flex", justifyContent: "center", alignItems: "center" }}><ReactLoading type={"spin"} color={"black"} height={60} width={60} /></div>;
+  }
+
   return (
     <div >
       {
         // !updatedCartList.length ?
-        !cartItem.length ?
+        (!cartItem.length ) ?
           <Box
             sx={{
               display: 'flex',

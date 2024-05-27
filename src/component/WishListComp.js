@@ -160,12 +160,12 @@ export default function WishListComp() {
     }
   }
 
-  if (!wishList) {
+  if (!wishList.length) {
     return <div style={{ minHeight: "81vh", display: "flex", justifyContent: "center", alignItems: "center" }}><ReactLoading type={"spin"} color={"black"} height={60} width={60} /></div>;
   }
 
   return (
-    <div style={{ width: "70%", margin: "auto" }}>
+    <div style={{ width: "70%", margin: "auto", minHeight: '80vh' }}>
       <div>
         <h3>Your WishList!</h3>
       </div>
