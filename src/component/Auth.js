@@ -47,7 +47,7 @@ export default function Auth() {
         setBookData(bookFetchData?.data);
 
       } catch (error) {
-        if (error.response.data.message === 'jwt expired') {
+        if (error.response?.data.message === 'jwt expired') {
           toast.error('session is expired!');
           localStorage.removeItem('token');
           setToken(null);

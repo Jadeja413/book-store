@@ -26,7 +26,7 @@ app.use('/wishlist', wishlistRoutes);
 
 app.use('/cart', cartlistRoutes);
 
-// app.listen(process.env.PORT, '192.168.31.153', () => {
+// app.listen(process.env.PORT, IP_ADDRESS, () => {
 //   console.log(`Server is running on portx ${process.env.PORT}`);
 // });
 app.listen(process.env.PORT, () => {

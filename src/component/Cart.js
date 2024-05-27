@@ -290,7 +290,7 @@ export default function Cart() {
                       <Card sx={{ width: "auto", marginBottom: "40px", marginTop: "20px", display: "flex", }}>
                         <CardMedia
                           component="img"
-                          height="100"
+                          height="auto"
                           image={book.cover_image}
                           alt={book.title}
                           sx={{ width: "30%" }}

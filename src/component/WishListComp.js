@@ -14,7 +14,9 @@ import ReactLoading from "react-loading";
 
 export default function WishListComp() {
 
-  const [wishList, setWishList] = useState([])
+  const [wishList, setWishList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   const bookData = useContext(BookDataContext);
   const data = useContext(StorageContext);
   const { setUserData } = useContext(UserDataContext);
@@ -41,7 +43,8 @@ export default function WishListComp() {
         );
         // console.log(response.data, "response====")
         // toast.success('Added to your WishList!');
-        setWishList(response.data)
+        setWishList(response.data);
+        setIsLoading(true);
       } catch (error) {
         // toast.error(error.response.data.message)
         console.log('error', error);
@@ -138,7 +141,7 @@ export default function WishListComp() {
       );
       setUserData((prev) => ({ ...prev, wishlistCount: prev.wishlistCount - 1 }));
 
-      const updatedUser = { ...user, wishlistCount: user.wishlistCount - 1 };
+      const updatedUser = { ...user, wishlistCount: user.wishlistCount > 0 && user.wishlistCount - 1 };
       localStorage.setItem('user', JSON.stringify(updatedUser));
       setWishList(response.data)
       toast.success('Removed from your WishList!', {
@@ -160,7 +163,7 @@ export default function WishListComp() {
     }
   }
 
-  if (!wishList.length) {
+  if (!wishList.length && !isLoading) {
     return <div style={{ minHeight: "81vh", display: "flex", justifyContent: "center", alignItems: "center" }}><ReactLoading type={"spin"} color={"black"} height={60} width={60} /></div>;
   }
 
