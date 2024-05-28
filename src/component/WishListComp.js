@@ -139,11 +139,13 @@ export default function WishListComp() {
           }
         }
       );
-      setUserData((prev) => ({ ...prev, wishlistCount: prev.wishlistCount - 1 }));
+      setUserData((prev) => ({ ...prev, wishlistCount: prev.wishlistCount > 0 && prev.wishlistCount - 1 }));
 
       const updatedUser = { ...user, wishlistCount: user.wishlistCount > 0 && user.wishlistCount - 1 };
       localStorage.setItem('user', JSON.stringify(updatedUser));
-      setWishList(response.data)
+
+      setWishList(response.data);
+      
       toast.success('Removed from your WishList!', {
         position: toast.POSITION.TOP_CENTER,
         autoClose: 1500
@@ -169,48 +171,49 @@ export default function WishListComp() {
 
   return (
     <div style={{ width: "70%", margin: "auto", minHeight: '80vh' }}>
-      <div>
-        <h3>Your WishList!</h3>
-      </div>
+      {/* <Typography gutterBottom variant="h6" component="div"> Your WishList! </Typography> */}
       {
         // updatedWishList.length ?
         //   updatedWishList.map(book =>
         wishList.length ?
-          wishList.map(book =>
-            <div style={{ margin: "40px 40px" }} key={book.id}>
-              <Card sx={{ padding: "20px 20px" }}>
-                {/* <CardActionArea onClick={()=>navigate(`/product/${book.id}`)}> */}
-                <CardMedia
-                  component="img"
-                  height="120"
-                  image={book.cover_image}
-                  alt={book.title}
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div" sx={{ cursor: 'pointer' }} onClick={() => navigate(`/product/${book.id}`)}>
-                    {book.title}
-                  </Typography>
-                  <Typography gutterBottom variant="h7" component="div">
-                    {book.author}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {book.description}
-                  </Typography>
-                </CardContent>
-                {/* </CardActionArea> */}
-                <CardActions>
-                  <Button size="small" variant="contained" color="primary" onClick={() => AddCartHandler(book.id)}>
-                    Add To Cart
-                  </Button>
-                  <ToastContainer />
-                  <Button size="small" variant="outlined" color="primary" onClick={() => RemoveWishListHandler(book.id)}>
-                    Remove From WishList
-                  </Button>
-                  <ToastContainer />
-                </CardActions>
-              </Card>
-            </div>
-          ) :
+          <Box style={{  minHeight: '80vh' }}>
+            <Typography gutterBottom variant="h6" component="div"> Your WishList! </Typography>
+            {wishList.map(book =>
+              <div style={{ margin: "40px 40px" }} key={book.id}>
+                <Card sx={{ padding: "20px 20px" }}>
+                  {/* <CardActionArea onClick={()=>navigate(`/product/${book.id}`)}> */}
+                  <CardMedia
+                    component="img"
+                    height="120"
+                    image={book.cover_image}
+                    alt={book.title}
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="div" sx={{ cursor: 'pointer' }} onClick={() => navigate(`/product/${book.id}`)}>
+                      {book.title}
+                    </Typography>
+                    <Typography gutterBottom variant="h7" component="div">
+                      {book.author}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {book.description}
+                    </Typography>
+                  </CardContent>
+                  {/* </CardActionArea> */}
+                  <CardActions>
+                    <Button size="small" variant="contained" color="primary" onClick={() => AddCartHandler(book.id)}>
+                      Add To Cart
+                    </Button>
+                    <ToastContainer />
+                    <Button size="small" variant="outlined" color="primary" onClick={() => RemoveWishListHandler(book.id)}>
+                      Remove From WishList
+                    </Button>
+                    <ToastContainer />
+                  </CardActions>
+                </Card>
+              </div>
+            )}
+          </Box> :
           <div>
             <Box
               sx={{

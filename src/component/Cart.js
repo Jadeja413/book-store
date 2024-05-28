@@ -150,7 +150,10 @@ export default function Cart() {
       );
       // console.log("removeCartCount", cartItem?.length);
 
-      setUserData((prev) => ({ ...prev, cartlistCount: prev.cartlistCount - 1 }));
+      setUserData((prev) => ({ ...prev, cartlistCount: prev.cartlistCount > 0 && prev.cartlistCount - 1 }));
+
+      const updatedUser = { ...user, cartlistCount: user.cartlistCount > 0 && user.cartlistCount - 1 };
+      localStorage.setItem('user', JSON.stringify(updatedUser));
 
       fetchList();
     } catch (error) {
@@ -268,7 +271,7 @@ export default function Cart() {
             <Button variant="contained" onClick={() => navigate("/products")}>Browse Products</Button>
           </Box>
           :
-          <Grid sx={{ margin: "50px 50px" }} >
+          <Grid sx={{ margin: "50px 50px", minHeight: '80vh' }} >
             <Box>
               <Typography variant="h5" >Cart Items</Typography>
             </Box>
