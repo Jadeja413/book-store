@@ -32,7 +32,7 @@ const style = {
 };
 
 export function CardFormat(props) {
-  const { id, name, author, description, image, year } = props;
+  const { id, name, author, description, image, year, detailProducts } = props;
   const navigate = useNavigate();
 
   const data = useContext(StorageContext);
@@ -115,8 +115,8 @@ export function CardFormat(props) {
   }
 
   return (
-    <div style={{ margin: "20px 20px" }} >
-      <Card sx={{ height: 400, position: "relative", width: '280px' }}>
+    <div style={{ padding: '10px 10px' }} >
+      <Card sx={{ height: 400, position: "relative", width: '260px', margin: detailProducts ? 'auto' : '0px 28px' }}>
         <IconButton
           onClick={() => AddToWishListHandler(id)}
           style={{ zIndex: "1", position: "absolute", right: "0px", top: "0px", color: "gray" }}

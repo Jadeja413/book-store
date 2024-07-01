@@ -152,6 +152,10 @@ export default function WishListComp() {
       });
     } catch (error) {
       if (error.response?.data.message === 'jwt expired') {
+        toast.error(error.response?.data.message, {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 1500
+        })
         localStorage.clear();
         setToken(null);
         navigate('/login')
@@ -166,7 +170,7 @@ export default function WishListComp() {
   }
 
   if (!wishList.length && !isLoading) {
-    return <div style={{ minHeight: "81vh", display: "flex", justifyContent: "center", alignItems: "center" }}><ReactLoading type={"spin"} color={"black"} height={60} width={60} /></div>;
+    return <div style={{ minHeight: "80vh", display: "flex", justifyContent: "center", alignItems: "center" }}><ReactLoading type={"spin"} color={"black"} height={60} width={60} /></div>;
   }
 
   return (
@@ -176,7 +180,7 @@ export default function WishListComp() {
         // updatedWishList.length ?
         //   updatedWishList.map(book =>
         wishList.length ?
-          <Box style={{  minHeight: '80vh' }}>
+          <Box style={{   margin: '30px 10px' }}>
             <Typography gutterBottom variant="h6" component="div"> Your WishList! </Typography>
             {wishList.map(book =>
               <div style={{ margin: "40px 40px" }} key={book.id}>

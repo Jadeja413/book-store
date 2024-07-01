@@ -112,17 +112,18 @@ export default function RecommendedBooks({ type }) {
           />
         </div>
 
-        <Grid container sx={{ padding: "20px", margin: '10px' }}>
+        <Grid container mt={6}>
           {
             currentData.map(book => (
-              <Grid key={book.id} item xs={12} sm={6} md={4} lg={3} xl={2} >
+              <Grid key={book.id} sx={{ marginTop: '20px', marginBottom: '20px'}} item xs={12} sm={6} md={4} lg={3} xl={2} >
                 <CardFormat
                   id={book.id}
                   name={book.title}
                   description={book.description}
                   author={book.author}
                   image={book.cover_image}
-                  year={book.publication_year} />
+                  year={book.publication_year}
+                  detailProducts={true} />
               </Grid>
             ))
           }

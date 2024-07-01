@@ -8,7 +8,7 @@ import "slick-carousel/slick/slick-theme.css";
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import { BookDataContext } from '../Context';
-import { Grid } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 
 export default function Cards(props) {
 
@@ -79,24 +79,20 @@ export default function Cards(props) {
     prevArrow: <SamplePrevArrow />,
   };
 
-
   return (
-    <Fragment>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "10px 20px" }}>
-        <div>
-          <p style={{ color: "GrayText", fontSize: "20px" }}>{titleOf}</p>
-        </div>
-        <div>
+    <Grid>
+      <Box margin='20px'>
+        <Grid display='flex' justifyContent='space-between' alignItems="center">
+          <Typography variant="p" sx={{ color: "GrayText", fontSize: "20px" }} >{titleOf}</Typography>
           <Link to={onPath} style={{ color: "#1976d2", textDecoration: "none" }}>{"view more >>"}</Link>
-        </div>
-      </div>
+        </Grid>
+      </Box>
 
-      <div style={{ margin: "10px 30px", padding: "10px 10px" }}>
+      <Grid sx={{ padding: '10px 40px' }}>
         <Slider {...settings}>
           {
             filteredData.map(book => (
-              // <div key={book.id} style={{display: "flex", flexWrap: 'wrap'}}>
-              <Grid key={book.id}>
+              <Grid key={book.id} >
                 <CardFormat
                   id={book.id}
                   name={book.title}
@@ -104,13 +100,13 @@ export default function Cards(props) {
                   image={book.cover_image}
                   author={book.author}
                   year={book.publication_year}
+                  detailProducts={filteredData.length < 5 ? false : true}
                 />
               </Grid>
-              // </div>
             ))
           }
         </Slider>
-      </div>
-    </Fragment>
+      </Grid>
+    </Grid>
   );
 }

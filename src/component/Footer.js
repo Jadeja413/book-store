@@ -1,6 +1,7 @@
 import React from 'react';
-import { Container, Grid, Box, Typography, Link } from '@mui/material';
+import { Container, Grid, Box, Typography } from '@mui/material';
 import { Facebook, Twitter, Instagram } from '@mui/icons-material';
+import { Link } from '@mui/material';
 
 const Footer = () => {
   return (
@@ -16,34 +17,36 @@ const Footer = () => {
             </Typography>
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom >
               Quick Links
             </Typography>
-            <Link href="/" color="inherit" variant="body2" display="block" gutterBottom>
-              Home
-            </Link>
-            {/* <Link href="/about" color="inherit" variant="body2" display="block" gutterBottom>
+            <Box sx={{ display: 'grid' }}>
+              <Link href="/" style={{ color: 'white', padding: '5px' }}>
+                Home
+              </Link>
+              {/* <Link href="/about" variant="body2" display="block" gutterBothrefm underline="hover">
               About
             </Link> */}
-            <Link href="/contact" color="inherit" variant="body2" display="block" gutterBottom>
-              Contact
-            </Link>
-            <Link href="/faq" color="inherit" variant="body2" display="block" gutterBottom>
-              FAQ
-            </Link>
+              <Link href="/contact" style={{ color: 'white', padding: '5px' }} >
+                Contact
+              </Link>
+              <Link href="/faq" style={{ color: 'white', padding: '5px' }}>
+                FAQ
+              </Link>
+            </Box>
           </Grid>
           <Grid item xs={12} sm={4}>
             <Typography variant="h6" gutterBottom>
               Follow Us
             </Typography>
             <Box display="flex">
-              <Link href="https://www.facebook.com" color="inherit" sx={{ mr: 1 }}>
+              <Link href="https://www.facebook.com" style={{ color: 'white', padding: '5px' }} >
                 <Facebook />
               </Link>
-              <Link href="https://www.twitter.com" color="inherit" sx={{ mr: 1 }}>
+              <Link href="https://www.twitter.com" style={{ color: 'white', padding: '5px' }} >
                 <Twitter />
               </Link>
-              <Link href="https://www.instagram.com" color="inherit">
+              <Link href="https://www.instagram.com" style={{ color: 'white', padding: '5px' }}>
                 <Instagram />
               </Link>
             </Box>
