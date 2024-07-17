@@ -2,7 +2,7 @@ import { useContext, useState, useEffect, useParams } from "react"
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import { Box, Typography } from '@mui/material';
+import { Box, Grid, Pagination, Typography } from '@mui/material';
 import { Button, CardActionArea, CardActions } from '@mui/material';
 import { BookDataContext, StorageContext, UserDataContext } from "./Context"
 import { useNavigate } from "react-router-dom";
@@ -17,6 +17,8 @@ export default function WishListComp() {
   const [wishList, setWishList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  const [curPage, setCurPage] = useState(1);
+
   const bookData = useContext(BookDataContext);
   const data = useContext(StorageContext);
   const { setUserData } = useContext(UserDataContext);
@@ -24,7 +26,14 @@ export default function WishListComp() {
 
   const navigate = useNavigate();
 
-  const updatedWishList = bookData.filter(item1 => data.wishList.some(item2 => item1.id === item2.id));
+  const itemsPerPage = 5;
+
+  const lastIndexOfList = curPage * itemsPerPage;
+  const firstIndexOfList = lastIndexOfList - itemsPerPage;
+  const filteredData = wishList?.slice(firstIndexOfList, lastIndexOfList);
+  const numbersOfPagination = Math.ceil(wishList.length / itemsPerPage);
+
+  // const updatedWishList = bookData.filter(item1 => data.wishList.some(item2 => item1.id === item2.id));
 
   // const user = localStorage.getItem('user');
   // const userData = JSON.parse(user)._id;
@@ -145,7 +154,6 @@ export default function WishListComp() {
       localStorage.setItem('user', JSON.stringify(updatedUser));
 
       setWishList(response.data);
-      
       toast.success('Removed from your WishList!', {
         position: toast.POSITION.TOP_CENTER,
         autoClose: 1500
@@ -173,16 +181,20 @@ export default function WishListComp() {
     return <div style={{ minHeight: "80vh", display: "flex", justifyContent: "center", alignItems: "center" }}><ReactLoading type={"spin"} color={"black"} height={60} width={60} /></div>;
   }
 
+  function handlePageChange(event, value) {
+    setCurPage(value);
+  }
+
   return (
     <div style={{ width: "70%", margin: "auto", minHeight: '80vh' }}>
       {/* <Typography gutterBottom variant="h6" component="div"> Your WishList! </Typography> */}
       {
         // updatedWishList.length ?
         //   updatedWishList.map(book =>
-        wishList.length ?
-          <Box style={{   margin: '30px 10px' }}>
+        filteredData.length ?
+          <Box style={{ margin: '30px 10px' }}>
             <Typography gutterBottom variant="h6" component="div"> Your WishList! </Typography>
-            {wishList.map(book =>
+            {filteredData.map(book =>
               <div style={{ margin: "40px 40px" }} key={book.id}>
                 <Card sx={{ padding: "20px 20px" }}>
                   {/* <CardActionArea onClick={()=>navigate(`/product/${book.id}`)}> */}
@@ -217,6 +229,18 @@ export default function WishListComp() {
                 </Card>
               </div>
             )}
+            <Grid display='flex' justifyContent='center' alignItems='center' pb={4}>
+              {
+                (numbersOfPagination > 0) &&
+                <Pagination
+                  variant="outlined"
+                  color="primary"
+                  count={numbersOfPagination}
+                  page={curPage}
+                  onChange={handlePageChange}
+                />
+              }
+            </Grid>
           </Box> :
           <div>
             <Box

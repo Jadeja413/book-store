@@ -101,6 +101,7 @@ export default function Cards(props) {
                   author={book.author}
                   year={book.publication_year}
                   detailProducts={filteredData.length < 5 ? false : true}
+                  price={book.price}
                 />
               </Grid>
             ))

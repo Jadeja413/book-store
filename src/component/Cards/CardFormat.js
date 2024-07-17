@@ -32,7 +32,7 @@ const style = {
 };
 
 export function CardFormat(props) {
-  const { id, name, author, description, image, year, detailProducts } = props;
+  const { id, name, author, description, image, year, detailProducts, price } = props;
   const navigate = useNavigate();
 
   const data = useContext(StorageContext);
@@ -116,7 +116,7 @@ export function CardFormat(props) {
 
   return (
     <div style={{ padding: '10px 10px' }} >
-      <Card sx={{ height: 400, position: "relative", width: '260px', margin: detailProducts ? 'auto' : '0px 28px' }}>
+      <Card sx={{ height: 420, position: "relative", width: '260px', margin: detailProducts ? 'auto' : '0px 28px' }}>
         <IconButton
           onClick={() => AddToWishListHandler(id)}
           style={{ zIndex: "1", position: "absolute", right: "0px", top: "0px", color: "gray" }}
@@ -154,8 +154,11 @@ export function CardFormat(props) {
           <Typography variant="body2" color="text.secondary" sx={{ height: 80, overflow: "auto", scrollbarWidth: "none", '&::-webkit-scrollbar': { display: 'none' } }}>
             {description}
           </Typography>
+          <Typography gutterBottom variant="content" component="div" sx={{  margin: '5px'}}>
+            ₹: {price}
+          </Typography>
         </CardContent>
-        <CardActions sx={{ bottom: 0, height: 50 }}>
+        <CardActions sx={{ bottom: 0, height: 30 }}>
           <Button size="small" variant="outlined" onClick={(e) => { e.stopPropagation(); handleOpen() }}>Details</Button>
           <Modal
             open={open}

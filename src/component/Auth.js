@@ -44,7 +44,7 @@ export default function Auth() {
           }
         });
 
-        setBookData(bookFetchData?.data);
+        setBookData(bookFetchData?.data.data);
 
       } catch (error) {
         if (error.response?.data.message === 'jwt expired') {
